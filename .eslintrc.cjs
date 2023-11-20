@@ -1,6 +1,13 @@
 module.exports = {
   root: true,
-  extends: ['universe/native', 'airbnb', 'airbnb-typescript', 'airbnb/hooks', 'prettier'],
+  extends: [
+    'universe/native',
+    'airbnb',
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
+    'prettier',
+  ],
   overrides: [
     {
       files: ['*.ts', '*.tsx', '*.d.ts'],
@@ -9,6 +16,7 @@ module.exports = {
       },
     },
   ],
+  plugins: ['@tanstack/query'],
   settings: {
     'import/resolver': {
       typescript: {},
@@ -19,7 +27,10 @@ module.exports = {
     'react/style-prop-object': 'off',
 
     // allow .js files to contain JSX, *you can also add typescript extensions too*
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', 'ts', 'tsx'] }],
+    'react/jsx-filename-extension': [
+      1,
+      { extensions: ['.js', '.jsx', 'ts', 'tsx'] },
+    ],
 
     //  to allow for usage of styles variable  before it was defined
     '@typescript-eslint/no-use-before-define': ['error', { variables: false }],

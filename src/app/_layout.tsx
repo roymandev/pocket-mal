@@ -1,5 +1,6 @@
-import { useCallback, useMemo } from 'react';
-import { View, useColorScheme } from 'react-native';
+import { useCallback, useEffect, useMemo } from 'react';
+import { AppState, Platform, View, useColorScheme } from 'react-native';
+import type { AppStateStatus } from 'react-native';
 import {
   MD3DarkTheme,
   MD3LightTheme,
@@ -23,8 +24,29 @@ import {
   useFonts,
 } from '@expo-google-fonts/rubik';
 import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
+import NetInfo from '@react-native-community/netinfo';
+import {
+  QueryClient,
+  QueryClientProvider,
+  focusManager,
+  onlineManager,
+} from '@tanstack/react-query';
 
 SplashScreen.preventAutoHideAsync();
+
+onlineManager.setEventListener((setOnline) =>
+  NetInfo.addEventListener((state) => {
+    setOnline(!!state.isConnected);
+  })
+);
+
+function onAppStateChange(status: AppStateStatus) {
+  if (Platform.OS !== 'web') {
+    focusManager.setFocused(status === 'active');
+  }
+}
+
+const queryClient = new QueryClient();
 
 function RootLayout() {
   const colorScheme = useColorScheme();
@@ -35,6 +57,12 @@ function RootLayout() {
     Rubik_400Regular,
     Rubik_500Medium,
   });
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', onAppStateChange);
+
+    return () => subscription.remove();
+  }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
@@ -118,16 +146,18 @@ function RootLayout() {
   }
 
   return (
-    <PaperProvider theme={paperTheme}>
-      <ThemeProvider value={paperTheme}>
-        <View
-          onLayout={onLayoutRootView}
-          style={{ flex: 1, backgroundColor: paperTheme.colors.background }}
-        >
-          <Slot />
-        </View>
-      </ThemeProvider>
-    </PaperProvider>
+    <QueryClientProvider client={queryClient}>
+      <PaperProvider theme={paperTheme}>
+        <ThemeProvider value={paperTheme}>
+          <View
+            onLayout={onLayoutRootView}
+            style={{ flex: 1, backgroundColor: paperTheme.colors.background }}
+          >
+            <Slot />
+          </View>
+        </ThemeProvider>
+      </PaperProvider>
+    </QueryClientProvider>
   );
 }
 
