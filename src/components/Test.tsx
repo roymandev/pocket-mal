@@ -1,14 +1,14 @@
-import { Text } from 'react-native';
+import { View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 
 function Test() {
   return (
-    <Text
-      style={{
-        fontFamily: 'Rubik_400Regular',
-      }}
-    >
-      Open up App.tsx to start working on your app!
-    </Text>
+    <View style={{ gap: 16 }}>
+      <Text>Open up App.tsx to start working on your app!</Text>
+      <Button onPress={() => {}} mode="contained">
+        Button Test
+      </Button>
+    </View>
   );
 }
 
