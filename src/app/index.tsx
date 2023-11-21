@@ -1,22 +1,21 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
 
-import { StatusBar } from 'expo-status-bar';
-
-import Test from '@/components/Test';
+import { useAnime } from '@/queries/animeQueries';
 
 export default function App() {
+  const { data, error, isLoading } = useAnime();
+
   return (
-    <View style={styles.container}>
-      <Test />
-      <StatusBar style="auto" />
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text>{error?.message}</Text>
+      <Text>{isLoading ? 'Loading...' : data?.data[0]?.node.title}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
