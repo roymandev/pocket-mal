@@ -1,11 +1,7 @@
 import { View } from 'react-native';
-import { Text } from 'react-native-paper';
-
-import { useAnime } from '@/queries/animeQueries';
+import { Button } from 'react-native-paper';
 
 export default function App() {
-  const { data, error, isLoading } = useAnime();
-
   return (
     <View
       style={{
@@ -14,8 +10,7 @@ export default function App() {
         justifyContent: 'center',
       }}
     >
-      <Text>{error?.message}</Text>
-      <Text>{isLoading ? 'Loading...' : data?.data[0]?.node.title}</Text>
+      <Button mode="contained">Home</Button>
     </View>
   );
 }

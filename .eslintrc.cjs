@@ -25,6 +25,11 @@ module.exports = {
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/style-prop-object': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/function-component-definition': [
+      2,
+      { namedComponents: 'function-declaration' },
+    ],
 
     // allow .js files to contain JSX, *you can also add typescript extensions too*
     'react/jsx-filename-extension': [

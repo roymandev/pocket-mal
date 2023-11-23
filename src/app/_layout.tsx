@@ -15,9 +15,9 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 
-import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
+import { PaperTab } from '@/components/navigator/PaperTab';
 import {
   Rubik_400Regular,
   Rubik_500Medium,
@@ -39,7 +39,6 @@ onlineManager.setEventListener((setOnline) =>
     setOnline(!!state.isConnected);
   })
 );
-
 function onAppStateChange(status: AppStateStatus) {
   if (Platform.OS !== 'web') {
     focusManager.setFocused(status === 'active');
@@ -153,7 +152,12 @@ function RootLayout() {
             onLayout={onLayoutRootView}
             style={{ flex: 1, backgroundColor: paperTheme.colors.background }}
           >
-            <Slot />
+            <PaperTab>
+              <PaperTab.Screen
+                name="index"
+                options={{ title: 'Home', tabBarIcon: 'home' }}
+              />
+            </PaperTab>
           </View>
         </ThemeProvider>
       </PaperProvider>
