@@ -78,6 +78,30 @@ function RootLayout() {
   });
 
   const customVariants = {
+    displaySmall: {
+      ...baseVariants.displaySmall,
+      fontFamily: 'Rubik_500Medium',
+    },
+    displayMedium: {
+      ...baseVariants.displayMedium,
+      fontFamily: 'Rubik_500Medium',
+    },
+    displayLarge: {
+      ...baseVariants.displayLarge,
+      fontFamily: 'Rubik_500Medium',
+    },
+    headlineSmall: {
+      ...baseVariants.headlineSmall,
+      fontFamily: 'Rubik_500Medium',
+    },
+    headlineMedium: {
+      ...baseVariants.headlineMedium,
+      fontFamily: 'Rubik_500Medium',
+    },
+    headlineLarge: {
+      ...baseVariants.headlineLarge,
+      fontFamily: 'Rubik_500Medium',
+    },
     titleSmall: {
       ...baseVariants.titleSmall,
       fontFamily: 'Rubik_500Medium',
@@ -100,6 +124,18 @@ function RootLayout() {
     },
     labelLarge: {
       ...baseVariants.labelLarge,
+      fontFamily: 'Rubik_500Medium',
+    },
+    bodySmall: {
+      ...baseVariants.bodySmall,
+      fontFamily: 'Rubik_500Medium',
+    },
+    bodyMedium: {
+      ...baseVariants.bodyMedium,
+      fontFamily: 'Rubik_500Medium',
+    },
+    bodyLarge: {
+      ...baseVariants.bodyLarge,
       fontFamily: 'Rubik_500Medium',
     },
   };
@@ -156,6 +192,10 @@ function RootLayout() {
               <PaperTab.Screen
                 name="index"
                 options={{ title: 'Home', tabBarIcon: 'home' }}
+              />
+              <PaperTab.Screen
+                name="search"
+                options={{ title: 'Search', tabBarIcon: 'magnify' }}
               />
             </PaperTab>
           </View>
