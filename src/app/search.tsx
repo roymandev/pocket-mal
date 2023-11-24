@@ -55,7 +55,6 @@ function SearchPage() {
         value={searchQuery}
         onChangeText={setSearchQuery}
         style={{ margin: 16 }}
-        autoFocus
       />
 
       <FlatList
