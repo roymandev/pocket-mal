@@ -139,10 +139,7 @@ function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <PaperProvider theme={paperTheme}>
         <ThemeProvider value={paperTheme}>
-          <View
-            onLayout={onLayoutRootView}
-            style={{ flex: 1, backgroundColor: paperTheme.colors.background }}
-          >
+          <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
             <PaperTab>
               <PaperTab.Screen
                 name="index"
