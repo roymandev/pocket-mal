@@ -1,14 +1,17 @@
-import { AnimeFields, ResAnimeList } from '@/types/anime';
+import { AnimeObject, ResAnimeList } from '@/types/anime';
 import { malApi } from '@/utils/malApi';
 
 export const getAnime = async (params: {
   q: string;
   limit?: number;
-  offset?: number;
-  fields?: keyof AnimeFields;
+  offset?: number | string;
+  fields?: (keyof AnimeObject)[];
 }) => {
   const res = await malApi.get<ResAnimeList>('/anime', {
-    params,
+    params: {
+      ...params,
+      fields: params.fields?.join(','),
+    },
   });
 
   return res.data;

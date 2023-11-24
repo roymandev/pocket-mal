@@ -1,8 +1,6 @@
 import { ApiResList } from '.';
 
-export type AnimeSeasons = 'winter' | 'spring' | 'summer' | 'fall';
-
-type BaseAnimeFields = {
+export type BaseAnimeObject = {
   id: number;
   title: string;
   main_picture?: {
@@ -11,7 +9,7 @@ type BaseAnimeFields = {
   };
 };
 
-export type AnimeFields = BaseAnimeFields & {
+export type AnimeObject = BaseAnimeObject & {
   alternative_titles?: {
     synonyms?: string[];
     en?: string;
@@ -36,10 +34,7 @@ export type AnimeFields = BaseAnimeFields & {
   status: 'finished_airing' | 'currently_airing' | 'not_yet_aired';
   // my_list_status
   num_episodes: number;
-  start_season?: {
-    year: number;
-    season: AnimeSeasons;
-  };
+  start_season?: SeasonObject;
   broadcast?: {
     day_of_the_week: string;
     start_time?: string;
@@ -68,6 +63,11 @@ export type AnimeFields = BaseAnimeFields & {
   }[];
 };
 
+export type SeasonObject = {
+  year: number;
+  season: 'winter' | 'spring' | 'summer' | 'fall';
+};
+
 export type ResAnimeList<
-  Fields extends keyof Omit<AnimeFields, keyof BaseAnimeFields> = never,
-> = ApiResList<Pick<AnimeFields, keyof BaseAnimeFields | Fields>>;
+  Fields extends keyof Omit<AnimeObject, keyof BaseAnimeObject> = never,
+> = ApiResList<Pick<AnimeObject, keyof BaseAnimeObject | Fields>>;

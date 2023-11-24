@@ -30,6 +30,7 @@ module.exports = {
       2,
       { namedComponents: 'function-declaration' },
     ],
+    'react/require-default-props': 'off',
 
     // allow .js files to contain JSX, *you can also add typescript extensions too*
     'react/jsx-filename-extension': [
