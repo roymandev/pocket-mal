@@ -77,68 +77,23 @@ function RootLayout() {
     config: baseFont,
   });
 
-  const customVariants = {
-    displaySmall: {
-      ...baseVariants.displaySmall,
-      fontFamily: 'Rubik_500Medium',
-    },
-    displayMedium: {
-      ...baseVariants.displayMedium,
-      fontFamily: 'Rubik_500Medium',
-    },
-    displayLarge: {
-      ...baseVariants.displayLarge,
-      fontFamily: 'Rubik_500Medium',
-    },
-    headlineSmall: {
-      ...baseVariants.headlineSmall,
-      fontFamily: 'Rubik_500Medium',
-    },
-    headlineMedium: {
-      ...baseVariants.headlineMedium,
-      fontFamily: 'Rubik_500Medium',
-    },
-    headlineLarge: {
-      ...baseVariants.headlineLarge,
-      fontFamily: 'Rubik_500Medium',
-    },
-    titleSmall: {
-      ...baseVariants.titleSmall,
-      fontFamily: 'Rubik_500Medium',
-    },
-    titleMedium: {
-      ...baseVariants.titleMedium,
-      fontFamily: 'Rubik_500Medium',
-    },
-    titleLarge: {
-      ...baseVariants.titleLarge,
-      fontFamily: 'Rubik_500Medium',
-    },
-    labelSmall: {
-      ...baseVariants.labelSmall,
-      fontFamily: 'Rubik_500Medium',
-    },
-    labelMedium: {
-      ...baseVariants.labelMedium,
-      fontFamily: 'Rubik_500Medium',
-    },
-    labelLarge: {
-      ...baseVariants.labelLarge,
-      fontFamily: 'Rubik_500Medium',
-    },
-    bodySmall: {
-      ...baseVariants.bodySmall,
-      fontFamily: 'Rubik_500Medium',
-    },
-    bodyMedium: {
-      ...baseVariants.bodyMedium,
-      fontFamily: 'Rubik_500Medium',
-    },
-    bodyLarge: {
-      ...baseVariants.bodyLarge,
-      fontFamily: 'Rubik_500Medium',
-    },
-  };
+  const customVariants = useMemo(
+    () =>
+      Object.keys(baseVariants).reduce((acc, key) => {
+        const variant = baseVariants[key as keyof typeof baseVariants];
+        const fontFamily =
+          variant.fontWeight === '500' ? 'Rubik_500Medium' : 'Rubik_400Regular';
+
+        return {
+          ...acc,
+          [key]: {
+            ...variant,
+            fontFamily,
+          },
+        };
+      }, {}),
+    [baseVariants]
+  );
 
   const fonts = configureFonts({
     config: {
