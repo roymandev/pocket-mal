@@ -29,6 +29,7 @@ function CardAnime({ anime, sx }: Props) {
           paddingLeft: 0,
           paddingRight: 0,
         }}
+        titleVariant="titleSmall"
       />
     </Card>
   );
