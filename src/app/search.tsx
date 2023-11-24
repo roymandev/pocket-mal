@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
@@ -33,19 +33,25 @@ function SearchPage() {
     fetchNextPage();
   };
 
-  const renderFooter = () => (
-    <InfinityListLoadingIndicator
-      isLoading={isLoading}
-      hasNextPage={hasNextPage}
-      isFetchingNextPage={isFetchingNextPage}
-    />
+  const renderFooter = useMemo(
+    () => (
+      <InfinityListLoadingIndicator
+        isLoading={isLoading}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+      />
+    ),
+    [isLoading, hasNextPage, isFetchingNextPage]
   );
 
-  const renderItem = ({ item }: { item: BaseAnimeObject }) => (
-    <CardAnime
-      anime={item}
-      sx={{ container: { width: width / 2 - 24, marginBottom: 16 } }}
-    />
+  const renderItem = useCallback(
+    (params: { item: BaseAnimeObject }) => (
+      <CardAnime
+        anime={params.item}
+        sx={{ container: { width: width / 2 - 24, marginBottom: 16 } }}
+      />
+    ),
+    [width]
   );
 
   return (
