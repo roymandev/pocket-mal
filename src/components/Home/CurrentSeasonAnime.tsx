@@ -26,7 +26,11 @@ function CurrentSeasonAnime() {
 
   const renderItem = useCallback(
     (params: { item: { node: BaseAnimeObject } }) => (
-      <CardAnime anime={params.item.node} sx={{ container: { width: 150 } }} />
+      <CardAnime
+        anime={params.item.node}
+        sx={{ container: { width: 150 } }}
+        onPress={() => router.push(`/anime/${params.item.node.id}`)}
+      />
     ),
     []
   );

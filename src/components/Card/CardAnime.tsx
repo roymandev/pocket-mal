@@ -1,4 +1,5 @@
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { ComponentPropsWithoutRef } from 'react';
+import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import { Image } from 'expo-image';
@@ -10,11 +11,11 @@ type Props = {
   sx?: {
     container?: ViewStyle;
   };
-};
+} & Pick<ComponentPropsWithoutRef<typeof Pressable>, 'onPress'>;
 
-function CardAnime({ anime, sx }: Props) {
+function CardAnime({ anime, sx, ...rest }: Props) {
   return (
-    <View style={[styles.container, sx?.container]}>
+    <Pressable style={[styles.container, sx?.container]} {...rest}>
       {anime.main_picture?.medium && (
         <Image
           source={{ uri: anime.main_picture.medium }}
@@ -28,7 +29,7 @@ function CardAnime({ anime, sx }: Props) {
       >
         {anime.title}
       </Text>
-    </View>
+    </Pressable>
   );
 }
 
