@@ -1,16 +1,14 @@
-import { View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import CurrentSeasonAnime from '@/components/Home/CurrentSeasonAnime';
 
 export default function App() {
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Button mode="contained">Home</Button>
-    </View>
+    <SafeAreaView style={{ flex: 1, padding: 16 }}>
+      <ScrollView>
+        <CurrentSeasonAnime />
+      </ScrollView>
+    </SafeAreaView>
   );
 }

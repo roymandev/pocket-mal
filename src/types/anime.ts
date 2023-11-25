@@ -68,6 +68,6 @@ export type SeasonObject = {
   season: 'winter' | 'spring' | 'summer' | 'fall';
 };
 
-export type ResAnimeList<
-  Fields extends keyof Omit<AnimeObject, keyof BaseAnimeObject> = never,
-> = ApiResList<Pick<AnimeObject, keyof BaseAnimeObject | Fields>>;
+export type ResAnimeList<Fields extends keyof AnimeObject = never> = ApiResList<
+  Pick<AnimeObject, keyof BaseAnimeObject | Fields>
+>;
