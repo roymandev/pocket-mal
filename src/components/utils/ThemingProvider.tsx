@@ -114,7 +114,10 @@ function ThemingProvider({ children }: Props) {
   return (
     <PaperProvider theme={paperTheme}>
       <ThemeProvider value={paperTheme}>
-        <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+        <View
+          onLayout={onLayoutRootView}
+          style={{ flex: 1, backgroundColor: paperTheme.colors.background }}
+        >
           {children}
         </View>
       </ThemeProvider>

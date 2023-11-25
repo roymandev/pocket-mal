@@ -1,4 +1,5 @@
-import { PaperTab } from '@/components/utils/PaperTab';
+import { Stack } from 'expo-router';
+
 import QueryProvider from '@/components/utils/QueryProvider';
 import ThemingProvider from '@/components/utils/ThemingProvider';
 
@@ -6,16 +7,7 @@ function RootLayout() {
   return (
     <QueryProvider>
       <ThemingProvider>
-        <PaperTab>
-          <PaperTab.Screen
-            name="index"
-            options={{ title: 'Home', tabBarIcon: 'home' }}
-          />
-          <PaperTab.Screen
-            name="search"
-            options={{ title: 'Search', tabBarIcon: 'magnify' }}
-          />
-        </PaperTab>
+        <Stack screenOptions={{ headerShown: false }} />
       </ThemingProvider>
     </QueryProvider>
   );

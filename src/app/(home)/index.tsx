@@ -5,8 +5,8 @@ import CurrentSeasonAnime from '@/components/Home/CurrentSeasonAnime';
 
 export default function App() {
   return (
-    <SafeAreaView style={{ flex: 1, padding: 16 }}>
-      <ScrollView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView style={{ padding: 16 }}>
         <CurrentSeasonAnime />
       </ScrollView>
     </SafeAreaView>
