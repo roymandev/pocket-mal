@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { AppState, AppStateStatus, Platform } from 'react-native';
 
+import { createExpoSQLitePersister } from '@/utils/queryPersister';
 import NetInfo from '@react-native-community/netinfo';
 import {
   QueryClient,
-  QueryClientProvider,
   focusManager,
   onlineManager,
 } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 onlineManager.setEventListener((setOnline) =>
   NetInfo.addEventListener((state) => {
@@ -20,7 +21,15 @@ const onAppStateChange = (status: AppStateStatus) => {
   }
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+    },
+  },
+});
+
+const persister = createExpoSQLitePersister();
 
 type Props = {
   children: JSX.Element;
@@ -33,7 +42,12 @@ function QueryProvider({ children }: Props) {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister }}
+    >
+      {children}
+    </PersistQueryClientProvider>
   );
 }
 
