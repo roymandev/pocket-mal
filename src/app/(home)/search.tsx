@@ -2,18 +2,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
+import { router } from 'expo-router';
 import { FlatList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CardAnime from '@/components/Card/CardAnime';
 import InfinityListLoadingIndicator from '@/components/InfinityListLoadingIndicator';
 import { useInfiniteAnime } from '@/queries/animeQueries';
-import { BaseAnimeObject } from '@/types/anime';
+import { components } from '@/schema';
 import { useDebounce } from '@uidotdev/usehooks';
 
 function SearchPage() {
   const { width } = useWindowDimensions();
-  const listRef = useRef<FlatList<BaseAnimeObject>>(null);
+  const listRef = useRef<FlatList<components['schemas']['anime']>>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
@@ -45,10 +46,11 @@ function SearchPage() {
   );
 
   const renderItem = useCallback(
-    (params: { item: BaseAnimeObject }) => (
+    (params: { item: components['schemas']['anime'] }) => (
       <CardAnime
         anime={params.item}
         sx={{ container: { width: width / 2 - 24, marginBottom: 16 } }}
+        onPress={() => router.push(`/anime/${params.item.mal_id}`)}
       />
     ),
     [width]
@@ -65,14 +67,17 @@ function SearchPage() {
 
       <FlatList
         ref={listRef}
-        data={data?.pages.reduce<BaseAnimeObject[]>((acc, page) => {
-          page.data.forEach((item) => {
-            acc.push(item.node);
-          });
+        data={data?.pages.reduce<components['schemas']['anime'][]>(
+          (acc, page) => {
+            page?.data?.forEach((item) => {
+              acc.push(item);
+            });
 
-          return acc;
-        }, [])}
-        keyExtractor={(item) => item.id.toString()}
+            return acc;
+          },
+          []
+        )}
+        keyExtractor={(item) => item.mal_id?.toString() || ''}
         renderItem={renderItem}
         numColumns={2}
         contentContainerStyle={{

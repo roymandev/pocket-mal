@@ -4,10 +4,10 @@ import { Text } from 'react-native-paper';
 
 import { Image } from 'expo-image';
 
-import { AnimeObject, BaseAnimeObject } from '@/types/anime';
+import { components } from '@/schema';
 
 type Props = {
-  anime: Pick<AnimeObject, keyof BaseAnimeObject>;
+  anime: components['schemas']['anime'];
   sx?: {
     container?: ViewStyle;
   };
@@ -16,9 +16,9 @@ type Props = {
 function CardAnime({ anime, sx, ...rest }: Props) {
   return (
     <Pressable style={[styles.container, sx?.container]} {...rest}>
-      {anime.main_picture?.medium && (
+      {anime.images?.jpg?.image_url && (
         <Image
-          source={{ uri: anime.main_picture.medium }}
+          source={{ uri: anime.images?.jpg?.image_url }}
           style={styles.image}
         />
       )}
@@ -27,7 +27,7 @@ function CardAnime({ anime, sx, ...rest }: Props) {
         numberOfLines={2}
         style={{ lineHeight: 18, paddingLeft: 0, height: 36 }}
       >
-        {anime.title}
+        {anime.titles?.[0]?.title}
       </Text>
     </Pressable>
   );

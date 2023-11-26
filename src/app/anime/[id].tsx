@@ -11,7 +11,7 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
 import PaperStackHeader from '@/components/PaperStackHeader';
 import PaperStack from '@/components/utils/PaperStack';
-import { useAnimeDetail } from '@/queries/animeQueries';
+import { useAnimeById } from '@/queries/animeQueries';
 
 function AnimeDetail() {
   const theme = useTheme();
@@ -20,17 +20,7 @@ function AnimeDetail() {
 
   const [expandSynopsys, setExpandSynopsys] = useState(false);
 
-  const { data } = useAnimeDetail(Number(id), {
-    fields: [
-      'synopsis',
-      'media_type',
-      'num_episodes',
-      'start_date',
-      'end_date',
-      'mean',
-      'genres',
-    ],
-  });
+  const { data } = useAnimeById(Number(id));
 
   const renderHeader = useCallback(
     (props: StackHeaderProps) => (
@@ -44,7 +34,7 @@ function AnimeDetail() {
       <PaperStack.Screen
         options={{
           headerShown: true,
-          title: data?.title,
+          title: data?.titles?.[0]?.title,
           header: renderHeader,
         }}
       />
@@ -52,7 +42,7 @@ function AnimeDetail() {
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, gap: 16 }}>
         <View style={{ flexDirection: 'row', gap: 16 }}>
           <Image
-            source={{ uri: data?.main_picture?.medium }}
+            source={{ uri: data?.images?.jpg?.image_url || '' }}
             style={{ width: 150, height: 225 }}
           />
           <View style={{ flex: 1, gap: 8 }}>
@@ -63,27 +53,27 @@ function AnimeDetail() {
 
             <View>
               <Text variant="titleSmall">Type:</Text>
-              <Text variant="bodySmall">{data?.media_type.toUpperCase()}</Text>
+              <Text variant="bodySmall">{data?.type}</Text>
             </View>
 
             <View>
               <Text variant="titleSmall">Episodes:</Text>
-              <Text variant="bodySmall">{data?.num_episodes}</Text>
+              <Text variant="bodySmall">{data?.episodes}</Text>
             </View>
 
             <View>
               <Text variant="titleSmall">Aired:</Text>
               <Text variant="bodySmall">
-                {dayjs(data?.start_date).format('MMM D, YYYY')} to{' '}
-                {data?.end_date
-                  ? dayjs(data?.end_date).format('MMM D, YYYY')
+                {dayjs(data?.aired?.from).format('MMM D, YYYY')} to{' '}
+                {data?.aired?.to
+                  ? dayjs(data.aired.to).format('MMM D, YYYY')
                   : '?'}
               </Text>
             </View>
 
             <View>
               <Text variant="titleSmall">Score:</Text>
-              <Text variant="bodySmall">{data?.mean}</Text>
+              <Text variant="bodySmall">{data?.score}</Text>
             </View>
           </View>
         </View>
