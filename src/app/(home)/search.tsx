@@ -1,60 +1,19 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { useState } from 'react';
 import { Searchbar } from 'react-native-paper';
 
-import { router } from 'expo-router';
-import { FlatList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import CardAnime from '@/components/Card/CardAnime';
-import InfinityListLoadingIndicator from '@/components/InfinityListLoadingIndicator';
+import InfiniteAnime from '@/components/InfiniteAnime';
 import { useInfiniteAnime } from '@/queries/animeQueries';
-import { components } from '@/schema';
 import { useDebounce } from '@uidotdev/usehooks';
 
 function SearchPage() {
-  const { width } = useWindowDimensions();
-  const listRef = useRef<FlatList<components['schemas']['anime']>>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteAnime({
-      q: debouncedSearchQuery,
-    });
-
-  useEffect(() => {
-    if (isLoading && !isFetchingNextPage) {
-      listRef.current?.scrollToOffset({ offset: 0, animated: false });
-    }
-  }, [isLoading, isFetchingNextPage]);
-
-  const fetchNextPageHandler = () => {
-    if (!hasNextPage || isFetchingNextPage) return;
-    fetchNextPage();
-  };
-
-  const renderFooter = useMemo(
-    () => (
-      <InfinityListLoadingIndicator
-        isLoading={isLoading}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-      />
-    ),
-    [isLoading, hasNextPage, isFetchingNextPage]
-  );
-
-  const renderItem = useCallback(
-    (params: { item: components['schemas']['anime'] }) => (
-      <CardAnime
-        anime={params.item}
-        sx={{ container: { width: width / 2 - 24, marginBottom: 16 } }}
-        onPress={() => router.push(`/anime/${params.item.mal_id}`)}
-      />
-    ),
-    [width]
-  );
+  const query = useInfiniteAnime({
+    q: debouncedSearchQuery,
+  });
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -65,29 +24,7 @@ function SearchPage() {
         style={{ margin: 16 }}
       />
 
-      <FlatList
-        ref={listRef}
-        data={data?.pages.reduce<components['schemas']['anime'][]>(
-          (acc, page) => {
-            page?.data?.forEach((item) => {
-              acc.push(item);
-            });
-
-            return acc;
-          },
-          []
-        )}
-        keyExtractor={(item) => item.mal_id?.toString() || ''}
-        renderItem={renderItem}
-        numColumns={2}
-        contentContainerStyle={{
-          paddingHorizontal: 16,
-        }}
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
-        ListFooterComponent={renderFooter}
-        onEndReachedThreshold={0.2}
-        onEndReached={fetchNextPageHandler}
-      />
+      <InfiniteAnime {...query} />
     </SafeAreaView>
   );
 }
