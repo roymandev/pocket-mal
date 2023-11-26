@@ -1,5 +1,3 @@
-import { ApiResList } from '.';
-
 export type BaseAnimeObject = {
   id: number;
   title: string;
@@ -68,6 +66,9 @@ export type SeasonObject = {
   season: 'winter' | 'spring' | 'summer' | 'fall';
 };
 
-export type ResAnimeList<Fields extends keyof AnimeObject = never> = ApiResList<
-  Pick<AnimeObject, keyof BaseAnimeObject | Fields>
+export type ParamAnimeFields = keyof Omit<AnimeObject, keyof BaseAnimeObject>;
+
+export type ReturnAnimeFields<T> = Pick<
+  AnimeObject,
+  keyof BaseAnimeObject | (T extends ParamAnimeFields ? T : never)
 >;
