@@ -31,6 +31,7 @@ module.exports = {
       { namedComponents: 'function-declaration' },
     ],
     'react/require-default-props': 'off',
+    '@typescript-eslint/naming-convention': 'off',
 
     // allow .js files to contain JSX, *you can also add typescript extensions too*
     'react/jsx-filename-extension': [

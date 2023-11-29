@@ -9,15 +9,20 @@ export const animeKeys = {
 
 export const useInfiniteAnime = (
   params?: operations['getAnimeSearch']['parameters']['query']
-) =>
-  useInfiniteQuery({
-    queryKey: [...animeKeys.infiniteSearch, params],
+) => {
+  const transformedParams = {
+    ...params,
+    q: params?.q?.toLocaleLowerCase(),
+  };
+
+  return useInfiniteQuery({
+    queryKey: [...animeKeys.infiniteSearch, transformedParams],
     queryFn: async ({ pageParam }) => {
       const res = await jikanRest.GET('/anime', {
         params: {
           query: {
             page: pageParam,
-            ...params,
+            ...transformedParams,
           },
         },
       });
@@ -32,6 +37,7 @@ export const useInfiniteAnime = (
     },
     enabled: !!params?.q?.length,
   });
+};
 
 export const useAnimeById = (id: number) =>
   useQuery({
