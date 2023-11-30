@@ -1,26 +1,26 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { View, useWindowDimensions } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
 
 import { router } from 'expo-router';
 import { FlatList } from 'react-native-gesture-handler';
 
-import { useInfiniteAnime } from '@/queries/animeQueries';
-import { components } from '@/schema';
+import { JikanBaseResponse } from '@/types/api.types';
+import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
-import CardAnime from './Card/CardAnime';
+import CardAnime, { CardAnimeProps } from './Card/CardAnime';
 
-type Props = ReturnType<typeof useInfiniteAnime>;
+type Props<T> = UseInfiniteQueryResult<InfiniteData<JikanBaseResponse<T[]>>>;
 
-function InfiniteAnime({
+function InfiniteAnime<T extends CardAnimeProps['anime']>({
   data,
   isLoading,
   isFetchingNextPage,
   fetchNextPage,
   hasNextPage,
-}: Props) {
+}: Props<T>) {
   const { width } = useWindowDimensions();
-  const listRef = useRef<FlatList<components['schemas']['anime']>>(null);
+  const listRef = useRef<FlatList<T>>(null);
 
   useEffect(() => {
     if (isLoading && !isFetchingNextPage) {
@@ -52,7 +52,7 @@ function InfiniteAnime({
   );
 
   const renderItem = useCallback(
-    (params: { item: components['schemas']['anime'] }) => (
+    (params: { item: T }) => (
       <CardAnime
         anime={params.item}
         sx={{ container: { width: width / 2 - 24, marginBottom: 16 } }}
@@ -62,29 +62,34 @@ function InfiniteAnime({
     [width]
   );
 
+  const renderEmptyList = () => (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>No Data</Text>
+    </View>
+  );
+
   return (
     <FlatList
       ref={listRef}
-      data={data?.pages.reduce<components['schemas']['anime'][]>(
-        (acc, page) => {
-          page?.data?.forEach((item) => {
-            acc.push(item);
-          });
+      data={data?.pages.reduce<T[]>((acc, page) => {
+        page?.data?.forEach((item) => {
+          acc.push(item);
+        });
 
-          return acc;
-        },
-        []
-      )}
+        return acc;
+      }, [])}
       keyExtractor={(item) => item.mal_id?.toString() || ''}
       renderItem={renderItem}
       numColumns={2}
       contentContainerStyle={{
         paddingHorizontal: 16,
+        flex: 1,
       }}
       columnWrapperStyle={{ justifyContent: 'space-between' }}
       ListFooterComponent={renderFooter}
       onEndReachedThreshold={0.2}
       onEndReached={fetchNextPageHandler}
+      ListEmptyComponent={renderEmptyList}
     />
   );
 }
