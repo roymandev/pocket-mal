@@ -1,15 +1,14 @@
+import { useState } from 'react';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import InfiniteAnime from '@/components/InfiniteAnime';
-import { useSetState } from '@/hooks/useSetState';
 import Form from '@/modules/Search/Form';
 import { useInfiniteAnime } from '@/modules/Search/query';
-import { operations } from '@/schema';
+import { AnimeSearchParams } from '@/types/api.types';
 
 function SearchPage() {
-  const [params, setParams] = useSetState<
-    NonNullable<operations['getAnimeSearch']['parameters']['query']>
-  >({});
+  const [params, setParams] = useState<AnimeSearchParams>({});
 
   const query = useInfiniteAnime({
     ...params,
