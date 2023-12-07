@@ -133,7 +133,7 @@ function AnimeOrderSelect({ value, onChange, trigger }: Props) {
               contentContainerStyle={{ gap: 24, paddingHorizontal: 16 }}
             >
               <View style={{ gap: 8 }}>
-                <Text variant="titleMedium">Score</Text>
+                <Text variant="titleMedium">Order by</Text>
                 <ChipSelect
                   data={Object.keys(ANIME_ORDERBY)}
                   mapItem={(key) => ({
