@@ -1,79 +1,26 @@
-import { useState } from 'react';
-import { View } from 'react-native';
-import { Badge, IconButton, Searchbar } from 'react-native-paper';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import InfiniteAnime from '@/components/InfiniteAnime';
-import ModalFilter from '@/components/Search/ModalFilter';
-import { useInfiniteAnime } from '@/queries/animeQueries';
+import { useSetState } from '@/hooks/useSetState';
+import Form from '@/modules/Search/Form';
+import { useInfiniteAnime } from '@/modules/Search/query';
 import { operations } from '@/schema';
-import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
 
 function SearchPage() {
-  const [showFilter, handlerShowFilter] = useDisclosure();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 500);
-
-  const [activeFilter, setActiveFilter] = useState<
+  const [params, setParams] = useSetState<
     NonNullable<operations['getAnimeSearch']['parameters']['query']>
   >({});
 
   const query = useInfiniteAnime({
-    q: debouncedSearchQuery,
-    ...activeFilter,
+    ...params,
   });
 
-  const applyFilter = (
-    filter: Partial<operations['getAnimeSearch']['parameters']['query']>
-  ) => {
-    setActiveFilter({
-      ...filter,
-    });
-    handlerShowFilter.close();
-  };
-
-  const closeModalHandler = () => {
-    handlerShowFilter.close();
-  };
-
   return (
-    <>
-      <SafeAreaView style={{ flex: 1 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            gap: 8,
-            margin: 16,
-          }}
-        >
-          <Searchbar
-            placeholder="Search"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={{ flex: 1 }}
-          />
+    <SafeAreaView style={{ flex: 1, gap: 16, margin: 16 }}>
+      <Form onSubmit={setParams} />
 
-          <View>
-            <IconButton icon="filter" onPress={handlerShowFilter.open} />
-            {Object.keys(activeFilter).length > 0 && (
-              <Badge style={{ position: 'absolute', top: 0, right: 0 }}>
-                {Object.keys(activeFilter).length}
-              </Badge>
-            )}
-          </View>
-        </View>
-
-        <InfiniteAnime {...query} />
-      </SafeAreaView>
-
-      <ModalFilter
-        visible={showFilter}
-        onDismiss={closeModalHandler}
-        initialValues={activeFilter}
-        onApply={applyFilter}
-      />
-    </>
+      <InfiniteAnime {...query} />
+    </SafeAreaView>
   );
 }
 
