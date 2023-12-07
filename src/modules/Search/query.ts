@@ -1,5 +1,6 @@
 import { DEFAULT_ANIME_SFW } from '@/constant';
 import { components } from '@/schema';
+import { AnimeSearchParams } from '@/types/api.types';
 import { jikanRest } from '@/utils/jikanApi';
 import {
   InfiniteData,
@@ -8,14 +9,12 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-import { SearchQuery } from './types';
-
 export const useInfiniteAnime = (
-  params?: SearchQuery
+  params?: AnimeSearchParams
 ): UseInfiniteQueryResult<
   InfiniteData<components['schemas']['anime_search']>
 > => {
-  const transformedParams: SearchQuery = {
+  const transformedParams: AnimeSearchParams = {
     ...params,
     sfw: DEFAULT_ANIME_SFW,
     q: params?.q?.toLocaleLowerCase(),
