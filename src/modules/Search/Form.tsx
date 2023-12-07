@@ -23,11 +23,7 @@ function Form({ value, onSubmit }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 500);
 
-  const [params, setParams] = useState<AnimeSearchParams>({
-    ..._value,
-    order_by: 'end_date',
-    sort: 'desc',
-  });
+  const [params, setParams] = useState<AnimeSearchParams>(_value);
 
   useEffect(() => {
     setValue({
