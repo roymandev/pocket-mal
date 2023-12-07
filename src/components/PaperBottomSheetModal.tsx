@@ -2,6 +2,8 @@ import { forwardRef } from 'react';
 import { Keyboard } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -26,6 +28,7 @@ const PaperBottomSheetModal = forwardRef<
   BottomSheetModalProps
 >(({ onChange, ...rest }, ref) => {
   const theme = useTheme();
+  const { top } = useSafeAreaInsets();
 
   return (
     <BottomSheetModal
@@ -43,6 +46,7 @@ const PaperBottomSheetModal = forwardRef<
         if (index >= 0) Keyboard.dismiss();
         onChange?.(index);
       }}
+      topInset={top}
       {...rest}
     />
   );
