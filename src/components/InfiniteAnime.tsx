@@ -62,11 +62,18 @@ function InfiniteAnime<T extends CardAnimeProps['anime']>({
     [width]
   );
 
-  const renderEmptyList = () => (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>No Data</Text>
-    </View>
-  );
+  const renderEmptyList = () =>
+    !isLoading && (
+      <View
+        style={{
+          height: 100,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text>No Data</Text>
+      </View>
+    );
 
   return (
     <FlatList
