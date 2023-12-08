@@ -1,5 +1,11 @@
-import { forwardRef, useCallback } from 'react';
-import { Keyboard } from 'react-native';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react';
+import { BackHandler, Keyboard } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
 import {
@@ -32,6 +38,8 @@ const PaperBottomSheetModal = forwardRef<
 >(({ onChange, ...rest }, ref) => {
   const theme = useTheme();
   const { top } = useSafeAreaInsets();
+  const innerRef = useRef<BottomSheetModalMethods>(null);
+  const currentIndex = useRef<number>(-1);
 
   const renderContainer = useCallback(
     (props: { children?: React.ReactNode }) => (
@@ -47,9 +55,25 @@ const PaperBottomSheetModal = forwardRef<
     []
   );
 
+  useImperativeHandle(ref, () => innerRef.current!, [innerRef.current]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (currentIndex.current >= 0) {
+          innerRef.current?.dismiss();
+          return true;
+        }
+        return false;
+      }
+    );
+    return () => backHandler.remove();
+  });
+
   return (
     <BottomSheetModal
-      ref={ref}
+      ref={innerRef}
       handleStyle={{
         paddingTop: 22,
         paddingBottom: 22,
@@ -61,6 +85,7 @@ const PaperBottomSheetModal = forwardRef<
       backdropComponent={renderBackdrop}
       onChange={(index) => {
         if (index >= 0) Keyboard.dismiss();
+        currentIndex.current = index;
         onChange?.(index);
       }}
       topInset={top}
