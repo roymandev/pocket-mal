@@ -81,10 +81,6 @@ function InfiniteAnime<T extends CardAnimeProps['anime']>({
       keyExtractor={(item) => item.mal_id?.toString() || ''}
       renderItem={renderItem}
       numColumns={2}
-      contentContainerStyle={{
-        paddingHorizontal: 16,
-        flex: 1,
-      }}
       columnWrapperStyle={{ justifyContent: 'space-between' }}
       ListFooterComponent={renderFooter}
       onEndReachedThreshold={0.2}
