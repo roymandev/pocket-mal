@@ -1,8 +1,11 @@
 import { forwardRef, useCallback } from 'react';
-import { Keyboard, View, useWindowDimensions } from 'react-native';
+import { Keyboard } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import {
   BottomSheetBackdrop,
@@ -27,22 +30,21 @@ const PaperBottomSheetModal = forwardRef<
   BottomSheetModalMethods,
   BottomSheetModalProps
 >(({ onChange, ...rest }, ref) => {
-  const { height, width } = useWindowDimensions();
   const theme = useTheme();
   const { top } = useSafeAreaInsets();
 
   const renderContainer = useCallback(
     (props: { children?: React.ReactNode }) => (
-      <View
+      <SafeAreaView
         style={{
-          height,
-          width,
+          height: '100%',
+          width: '100%',
           position: 'absolute',
         }}
         {...props}
       />
     ),
-    [height, width]
+    []
   );
 
   return (
