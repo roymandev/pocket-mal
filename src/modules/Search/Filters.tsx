@@ -6,7 +6,6 @@ import {
   Chip,
   IconButton,
   List,
-  Portal,
   Text,
 } from 'react-native-paper';
 
@@ -15,11 +14,7 @@ import AnimeOrderSelect, {
 } from '@/components/AnimeOrderSelect';
 import PaperBottomSheetModal from '@/components/PaperBottomSheetModal';
 import { AnimeSearchParams } from '@/types/api.types';
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetScrollView,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 const LIST_STYLE: StyleProp<ViewStyle> = {
   height: 60,
@@ -83,44 +78,40 @@ function Filters({ values, onSubmit, onClear }: Props) {
         )}
       </View>
 
-      <Portal>
-        <BottomSheetModalProvider>
-          <PaperBottomSheetModal
-            ref={bottomSheetRef}
-            snapPoints={['50%', '100%']}
-            index={0}
+      <PaperBottomSheetModal
+        ref={bottomSheetRef}
+        snapPoints={['50%', '100%']}
+        index={0}
+      >
+        <BottomSheetScrollView>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginHorizontal: 16,
+            }}
           >
-            <BottomSheetScrollView>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginHorizontal: 16,
-                }}
-              >
-                <Text variant="titleMedium">Search settings</Text>
-                <Button
-                  onPress={() => {
-                    onClear();
-                    bottomSheetRef.current?.close();
-                  }}
-                  disabled={activeFilters.length === 0}
-                >
-                  Clear All
-                </Button>
-              </View>
-              <List.Section>
-                <AnimeOrderSelect
-                  value={values}
-                  onChange={onSubmitHandler}
-                  trigger={renderOrderTrigger}
-                />
-              </List.Section>
-            </BottomSheetScrollView>
-          </PaperBottomSheetModal>
-        </BottomSheetModalProvider>
-      </Portal>
+            <Text variant="titleMedium">Search settings</Text>
+            <Button
+              onPress={() => {
+                onClear();
+                bottomSheetRef.current?.close();
+              }}
+              disabled={activeFilters.length === 0}
+            >
+              Clear All
+            </Button>
+          </View>
+          <List.Section>
+            <AnimeOrderSelect
+              value={values}
+              onChange={onSubmitHandler}
+              trigger={renderOrderTrigger}
+            />
+          </List.Section>
+        </BottomSheetScrollView>
+      </PaperBottomSheetModal>
     </>
   );
 }

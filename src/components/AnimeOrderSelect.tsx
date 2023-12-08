@@ -1,12 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { Keyboard, View } from 'react-native';
-import {
-  Button,
-  Portal,
-  SegmentedButtons,
-  Text,
-  useTheme,
-} from 'react-native-paper';
+import { Button, SegmentedButtons, Text, useTheme } from 'react-native-paper';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -23,7 +17,6 @@ import {
   BottomSheetFooter,
   BottomSheetFooterProps,
   BottomSheetModal,
-  BottomSheetModalProvider,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 
@@ -120,52 +113,48 @@ function AnimeOrderSelect({ value, onChange, trigger }: Props) {
         onPress: handlePresentModalPress,
       })}
 
-      <Portal>
-        <BottomSheetModalProvider>
-          <PaperBottomSheetModal
-            ref={bottomSheetRef}
-            snapPoints={[350]}
-            topInset={top}
-            index={0}
-            footerComponent={renderFooter}
-          >
-            <BottomSheetScrollView
-              contentContainerStyle={{ gap: 24, paddingHorizontal: 16 }}
-            >
-              <View style={{ gap: 8 }}>
-                <Text variant="titleMedium">Order by</Text>
-                <ChipSelect
-                  data={Object.keys(ANIME_ORDERBY)}
-                  mapItem={(key) => ({
-                    value: key,
-                    text: ANIME_ORDERBY[key as AnimeOrderby],
-                  })}
-                  selected={order.order_by}
-                  setSelected={(key) => onSelectHanlder(key as AnimeOrderby)}
-                />
-              </View>
+      <PaperBottomSheetModal
+        ref={bottomSheetRef}
+        snapPoints={[350]}
+        topInset={top}
+        index={0}
+        footerComponent={renderFooter}
+      >
+        <BottomSheetScrollView
+          contentContainerStyle={{ gap: 24, paddingHorizontal: 16 }}
+        >
+          <View style={{ gap: 8 }}>
+            <Text variant="titleMedium">Order by</Text>
+            <ChipSelect
+              data={Object.keys(ANIME_ORDERBY)}
+              mapItem={(key) => ({
+                value: key,
+                text: ANIME_ORDERBY[key as AnimeOrderby],
+              })}
+              selected={order.order_by}
+              setSelected={(key) => onSelectHanlder(key as AnimeOrderby)}
+            />
+          </View>
 
-              {order.order_by && order.sort && (
-                <View style={{ gap: 8 }}>
-                  <Text variant="titleMedium">Sort</Text>
-                  <SegmentedButtons
-                    value={order.sort}
-                    onValueChange={(sort) =>
-                      setOrder({
-                        sort: sort as typeof DEFAULT_ANIME_SORT,
-                      })
-                    }
-                    buttons={ANIME_SORT.map((status) => ({
-                      value: status,
-                      label: status === 'asc' ? 'Ascending' : 'Descending',
-                    }))}
-                  />
-                </View>
-              )}
-            </BottomSheetScrollView>
-          </PaperBottomSheetModal>
-        </BottomSheetModalProvider>
-      </Portal>
+          {order.order_by && order.sort && (
+            <View style={{ gap: 8 }}>
+              <Text variant="titleMedium">Sort</Text>
+              <SegmentedButtons
+                value={order.sort}
+                onValueChange={(sort) =>
+                  setOrder({
+                    sort: sort as typeof DEFAULT_ANIME_SORT,
+                  })
+                }
+                buttons={ANIME_SORT.map((status) => ({
+                  value: status,
+                  label: status === 'asc' ? 'Ascending' : 'Descending',
+                }))}
+              />
+            </View>
+          )}
+        </BottomSheetScrollView>
+      </PaperBottomSheetModal>
     </>
   );
 }
