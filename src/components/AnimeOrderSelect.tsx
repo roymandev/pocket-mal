@@ -1,8 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { Keyboard, View } from 'react-native';
-import { Button, SegmentedButtons, Text, useTheme } from 'react-native-paper';
-
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SegmentedButtons, Text } from 'react-native-paper';
 
 import ChipSelect from '@/components/ChipSelect';
 import {
@@ -14,12 +12,12 @@ import {
 import { useSetState } from '@/hooks/useSetState';
 import { capitalize } from '@/utils/formatter';
 import {
-  BottomSheetFooter,
   BottomSheetFooterProps,
   BottomSheetModal,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 
+import FilterFooter from './FilterFooter';
 import PaperBottomSheetModal from './PaperBottomSheetModal';
 
 type Value = {
@@ -42,8 +40,6 @@ type Props = {
 };
 
 function AnimeOrderSelect({ value, onChange, trigger }: Props) {
-  const theme = useTheme();
-  const { top } = useSafeAreaInsets();
   const [order, setOrder, overrideOrder] = useSetState(value);
 
   // ref
@@ -68,37 +64,20 @@ function AnimeOrderSelect({ value, onChange, trigger }: Props) {
 
   const renderFooter = useCallback(
     (props: BottomSheetFooterProps) => (
-      <BottomSheetFooter
+      <FilterFooter
         {...props}
-        style={{
-          padding: 16,
-          backgroundColor: theme.colors.surface,
-          flexDirection: 'row',
-          gap: 8,
+        clearButtonProps={{
+          onPress: () =>
+            overrideOrder({ order_by: undefined, sort: undefined }),
+          disabled: !order.order_by,
         }}
-      >
-        <Button
-          mode="text"
-          onPress={() =>
-            overrideOrder({ order_by: undefined, sort: undefined })
-          }
-          disabled={!order.order_by}
-        >
-          Clear
-        </Button>
-        <Button
-          mode="contained"
-          onPress={() => {
+        applyButtonProps={{
+          onPress: () => {
             onChange(order);
             bottomSheetRef.current?.close();
-          }}
-          style={{
-            flex: 1,
-          }}
-        >
-          Apply
-        </Button>
-      </BottomSheetFooter>
+          },
+        }}
+      />
     ),
     [order, onChange, bottomSheetRef.current]
   );
@@ -116,8 +95,6 @@ function AnimeOrderSelect({ value, onChange, trigger }: Props) {
       <PaperBottomSheetModal
         ref={bottomSheetRef}
         snapPoints={[350]}
-        topInset={top}
-        index={0}
         footerComponent={renderFooter}
       >
         <BottomSheetScrollView
