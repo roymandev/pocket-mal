@@ -38,6 +38,8 @@ function Form({ value, onSubmit }: Props) {
         style={{
           flexDirection: 'row',
           gap: 8,
+          marginHorizontal: 16,
+          marginTop: 16,
         }}
       >
         <Searchbar

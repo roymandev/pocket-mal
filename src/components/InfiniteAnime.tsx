@@ -89,6 +89,9 @@ function InfiniteAnime<T extends CardAnimeProps['anime']>({
       renderItem={renderItem}
       numColumns={2}
       columnWrapperStyle={{ justifyContent: 'space-between' }}
+      contentContainerStyle={{
+        margin: 16,
+      }}
       ListFooterComponent={renderFooter}
       onEndReachedThreshold={0.2}
       onEndReached={fetchNextPageHandler}
