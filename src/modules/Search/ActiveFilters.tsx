@@ -21,25 +21,14 @@ const renderItem = (
       return <ChipAnimeOrder values={values} onChange={onChange} />;
 
     case 'genres':
+    case 'genres_exclude':
+      if (item === 'genres_exclude' && values.genres) return null;
       return (
         <AnimeGenresSelect
-          title="Genres"
-          value={values.genres}
-          onChange={(value) => onChange({ genres: value })}
+          values={values}
+          onApply={onChange}
           trigger={({ selectedLength, onPress }) => (
             <Chip onPress={onPress}>Genres: {selectedLength}</Chip>
-          )}
-        />
-      );
-
-    case 'genres_exclude':
-      return (
-        <AnimeGenresSelect
-          title="Exclude Genres"
-          value={values.genres_exclude}
-          onChange={(value) => onChange({ genres_exclude: value })}
-          trigger={({ selectedLength, onPress }) => (
-            <Chip onPress={onPress}>Excl. Genres: {selectedLength}</Chip>
           )}
         />
       );
