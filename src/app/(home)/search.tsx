@@ -15,7 +15,9 @@ function SearchPage() {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView
+      style={{ flex: 1, gap: 16, marginHorizontal: 16, marginTop: 16 }}
+    >
       <Form onSubmit={setParams} />
 
       <InfiniteAnime {...query} />

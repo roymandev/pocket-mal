@@ -5,6 +5,8 @@ import {
   BottomSheetFooterProps,
 } from '@gorhom/bottom-sheet';
 
+export const FILTER_FOOTER_HEIGHT = 72;
+
 type Props = BottomSheetFooterProps & {
   clearButtonProps?: {
     onPress?: () => void;
@@ -21,9 +23,11 @@ function FilterFooter({ clearButtonProps, applyButtonProps, ...rest }: Props) {
     <BottomSheetFooter
       {...rest}
       style={{
-        padding: 16,
         flexDirection: 'row',
+        alignItems: 'center',
         gap: 8,
+        paddingHorizontal: 16,
+        height: FILTER_FOOTER_HEIGHT,
         backgroundColor: theme.colors.surface,
       }}
     >
