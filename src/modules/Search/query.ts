@@ -6,7 +6,6 @@ import {
   InfiniteData,
   UseInfiniteQueryResult,
   useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query';
 
 export const useInfiniteAnime = (
@@ -43,13 +42,3 @@ export const useInfiniteAnime = (
     // enabled: !!params?.q?.length,
   });
 };
-
-export const useAnimeGenres = () =>
-  useQuery({
-    queryKey: ['genres', 'anime'],
-    queryFn: async () => {
-      const res = await jikanRest.GET('/genres/anime');
-
-      return res.data;
-    },
-  });

@@ -9,6 +9,9 @@ import {
   Text,
 } from 'react-native-paper';
 
+import AnimeGenresSelect, {
+  AnimeGenresSelectTriggerProps,
+} from '@/components/AnimeGenresSelect';
 import AnimeOrderSelect, {
   AnimeOrderSelectTriggerProps,
 } from '@/components/AnimeOrderSelect';
@@ -41,6 +44,18 @@ const renderOrderTrigger = ({
         </Chip>
       )
     }
+  />
+);
+
+const renderGenresTrigger = ({
+  selectedLength,
+  onPress,
+}: AnimeGenresSelectTriggerProps) => (
+  <List.Item
+    style={LIST_STYLE}
+    title="Genres"
+    onPress={onPress}
+    right={() => selectedLength && <Chip>{selectedLength}</Chip>}
   />
 );
 
@@ -108,6 +123,13 @@ function Filters({ values, onSubmit, onClear }: Props) {
               value={values}
               onChange={onSubmitHandler}
               trigger={renderOrderTrigger}
+            />
+
+            <AnimeGenresSelect
+              title="Genres"
+              value={values.genres}
+              onChange={(value) => onSubmitHandler({ genres: value })}
+              trigger={renderGenresTrigger}
             />
           </List.Section>
         </BottomSheetScrollView>
