@@ -17,6 +17,7 @@ import PaperBottomSheetModal from './PaperBottomSheetModal';
 export type AnimeGenresSelectTriggerProps = {
   selectedLength: number | null;
   onPress: () => void;
+  title: string;
 };
 
 const renderCheckbox = (checked: boolean) => (
@@ -93,6 +94,7 @@ function AnimeGenresSelect({ value, onChange, title, trigger }: Props) {
       {trigger({
         selectedLength: value ? value.split(',').length : null,
         onPress: handlePresentModalPress,
+        title,
       })}
 
       <PaperBottomSheetModal

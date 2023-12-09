@@ -3,7 +3,11 @@ import { View } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
 import { AnimeSearchParams } from '@/types/api.types';
-import { useDebouncedValue, useUncontrolled } from '@mantine/hooks';
+import {
+  useDebouncedValue,
+  useSetState,
+  useUncontrolled,
+} from '@mantine/hooks';
 
 import ActiveFilters from './ActiveFilters';
 import Filters from './Filters';
@@ -23,7 +27,7 @@ function Form({ value, onSubmit }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 500);
 
-  const [params, setParams] = useState<AnimeSearchParams>(_value);
+  const [params, setParams] = useSetState<AnimeSearchParams>(_value);
 
   useEffect(() => {
     setValue({

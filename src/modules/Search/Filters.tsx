@@ -50,10 +50,11 @@ const renderOrderTrigger = ({
 const renderGenresTrigger = ({
   selectedLength,
   onPress,
+  title,
 }: AnimeGenresSelectTriggerProps) => (
   <List.Item
     style={LIST_STYLE}
-    title="Genres"
+    title={title}
     onPress={onPress}
     right={() => selectedLength && <Chip>{selectedLength}</Chip>}
   />
@@ -129,6 +130,13 @@ function Filters({ values, onSubmit, onClear }: Props) {
               title="Genres"
               value={values.genres}
               onChange={(value) => onSubmitHandler({ genres: value })}
+              trigger={renderGenresTrigger}
+            />
+
+            <AnimeGenresSelect
+              title="Exclude Genres"
+              value={values.genres_exclude}
+              onChange={(value) => onSubmitHandler({ genres_exclude: value })}
               trigger={renderGenresTrigger}
             />
           </List.Section>
