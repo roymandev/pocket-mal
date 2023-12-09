@@ -19,7 +19,8 @@ export const useAnimeById = (id: number) =>
   });
 
 export const useAnimeGenres = (
-  queryParams?: operations['getAnimeGenres']['parameters']['query']
+  queryParams?: operations['getAnimeGenres']['parameters']['query'],
+  enabled = true
 ) =>
   useQuery({
     queryKey: ['genres', 'anime', queryParams],
@@ -30,6 +31,7 @@ export const useAnimeGenres = (
         },
       });
 
-      return res.data || [];
+      return res.data?.data || [];
     },
+    enabled,
   });

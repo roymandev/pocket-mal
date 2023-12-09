@@ -1,14 +1,20 @@
-import { useCallback, useRef, useState as useSetState } from 'react';
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState as useSetState,
+  useState,
+} from 'react';
 import { View } from 'react-native';
 import { Searchbar, SegmentedButtons } from 'react-native-paper';
 
 import { useAnimeGenres } from '@/queries/animeQueries';
 import { BottomSheetFooterProps, BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useDebouncedValue, useListState } from '@mantine/hooks';
+import { useDebouncedValue } from '@mantine/hooks';
 
-import FilterFooter, { FILTER_FOOTER_HEIGHT } from '../FilterFooter';
-import PaperBottomSheetModal from '../PaperBottomSheetModal';
-import List from './List';
+import FilterFooter, { FILTER_FOOTER_HEIGHT } from './FilterFooter';
+import PaperBottomSheetModal from './PaperBottomSheetModal';
+import SelectList, { BaseSelectListItem } from './SelectList';
 
 type Value = {
   genres?: string;
@@ -39,12 +45,38 @@ function AnimeGenresSelect({ values, onApply, trigger }: Props) {
     (values?.genres?.split(',').length || 0) +
     (values?.genres_exclude?.split(',').length || 0);
 
-  const [includes, handleIncludes] = useListState<number>([]);
-  const [excludes, handleExcludes] = useListState<number>([]);
+  const [includes, setIncludes] = useState<number[]>([]);
+  const [excludes, setExcludes] = useState<number[]>([]);
 
-  const { data: genresData } = useAnimeGenres({ filter: 'genres' });
-  const { data: themesData } = useAnimeGenres({ filter: 'themes' });
-  const { data: demographicsData } = useAnimeGenres({ filter: 'demographics' });
+  const { data: explicitGenres } = useAnimeGenres({
+    filter: 'explicit_genres',
+  });
+  const { data: genresData } = useAnimeGenres(undefined, !!explicitGenres);
+
+  const transformedGenres = useMemo(() => {
+    if (!genresData || !values) return [];
+
+    const selectedList = type === 'includes' ? includes : excludes;
+    const disabledList = type === 'includes' ? excludes : includes;
+
+    return genresData.reduce<BaseSelectListItem<number>[]>((acc, curr) => {
+      if (explicitGenres?.some((genre) => genre.mal_id === curr.mal_id)) {
+        return acc;
+      }
+      if (!curr.mal_id) return acc;
+
+      const selected = selectedList.includes(curr.mal_id);
+      const disabled = disabledList.includes(curr.mal_id);
+
+      acc.push({
+        value: curr.mal_id,
+        text: curr.name,
+        selected,
+        disabled,
+      });
+      return acc;
+    }, []);
+  }, [genresData, includes, excludes, type]);
 
   const onApplyHanlder = () => {
     onApply({
@@ -54,34 +86,11 @@ function AnimeGenresSelect({ values, onApply, trigger }: Props) {
     bottomSheetRef.current?.close();
   };
 
-  const handleItemPress = (item: number, isSelected: boolean) => {
-    if (type === 'includes') {
-      const itemIndex = includes.findIndex((i) => i === item);
-      if (isSelected) {
-        handleIncludes.remove(itemIndex);
-      } else {
-        handleIncludes.append(item);
-      }
-    }
-    if (type === 'excludes') {
-      if (isSelected) {
-        const itemIndex = excludes.findIndex((i) => i === item);
-        handleExcludes.remove(itemIndex);
-      } else {
-        handleExcludes.append(item);
-      }
-    }
-  };
-
-  // callbacks
-  const handlePresentModalPress = () => {
+  const triggerPressHandler = () => {
     bottomSheetRef.current?.present();
-
     if (values) {
-      handleIncludes.setState(values.genres?.split(',').map(Number) || []);
-      handleExcludes.setState(
-        values.genres_exclude?.split(',').map(Number) || []
-      );
+      setIncludes(values.genres?.split(',').map(Number) || []);
+      setExcludes(values.genres_exclude?.split(',').map(Number) || []);
     }
   };
 
@@ -93,8 +102,8 @@ function AnimeGenresSelect({ values, onApply, trigger }: Props) {
         clearButtonProps={{
           disabled: includes.length === 0 && excludes.length === 0,
           onPress: () => {
-            handleIncludes.setState([]);
-            handleExcludes.setState([]);
+            setIncludes([]);
+            setExcludes([]);
           },
         }}
         applyButtonProps={{
@@ -109,7 +118,7 @@ function AnimeGenresSelect({ values, onApply, trigger }: Props) {
     <>
       {trigger({
         selectedLength: valuesLength || null,
-        onPress: handlePresentModalPress,
+        onPress: triggerPressHandler,
       })}
 
       <PaperBottomSheetModal
@@ -139,25 +148,24 @@ function AnimeGenresSelect({ values, onApply, trigger }: Props) {
               onChangeText={setQuery}
             />
           </View>
-          <List
-            sections={[
-              {
-                title: 'Genres',
-                data: genresData?.data || [],
-              },
-              {
-                title: 'Themes',
-                data: themesData?.data || [],
-              },
-              {
-                title: 'Demographics',
-                data: demographicsData?.data || [],
-              },
-            ]}
-            filter={debouncedQuery}
-            selectedGenres={type === 'includes' ? includes : excludes}
-            disabledGenres={type === 'includes' ? excludes : includes}
-            onItemPress={handleItemPress}
+
+          <SelectList
+            values={transformedGenres}
+            search={debouncedQuery}
+            onChange={(genres) => {
+              const ids = genres.reduce<number[]>((acc, curr) => {
+                if (curr.selected) {
+                  acc.push(curr.value);
+                }
+                return acc;
+              }, []);
+              if (type === 'includes') {
+                setIncludes(ids);
+              } else {
+                setExcludes(ids);
+              }
+            }}
+            watch={[type]}
           />
         </View>
       </PaperBottomSheetModal>
