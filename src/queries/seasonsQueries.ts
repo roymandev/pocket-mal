@@ -21,6 +21,6 @@ export const useSeasonNow = (
         },
       });
 
-      return res.data;
+      return res.data || [];
     },
   });

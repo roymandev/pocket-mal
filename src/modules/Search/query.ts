@@ -31,7 +31,7 @@ export const useInfiniteAnime = (
         },
       });
 
-      return res.data;
+      return res.data || null;
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, _, lastPageParam) => {

@@ -14,7 +14,7 @@ export const useAnimeById = (id: number) =>
         },
       });
 
-      return res.data?.data;
+      return res.data?.data || null;
     },
   });
 
@@ -30,6 +30,6 @@ export const useAnimeGenres = (
         },
       });
 
-      return res.data;
+      return res.data || [];
     },
   });
