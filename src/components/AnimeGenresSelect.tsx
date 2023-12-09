@@ -27,7 +27,7 @@ type Props = {
   trigger: (props: AnimeGenresSelectTriggerProps) => React.ReactNode;
   title: string;
   value?: string;
-  onChange: (value: string) => void;
+  onChange: (value?: string) => void;
 };
 
 function AnimeGenresSelect({ value, onChange, title, trigger }: Props) {
@@ -52,7 +52,7 @@ function AnimeGenresSelect({ value, onChange, title, trigger }: Props) {
   );
 
   const onChangeHandler = () => {
-    onChange(selected.map((item) => item.mal_id).join(','));
+    onChange(selected.map((item) => item.mal_id).join(',') || undefined);
     bottomSheetRef.current?.close();
   };
 

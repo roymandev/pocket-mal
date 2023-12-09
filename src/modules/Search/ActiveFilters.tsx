@@ -48,9 +48,12 @@ function ActiveFilters({ values, onChange }: Props) {
     <FlatList
       horizontal
       data={activeFilters}
-      renderItem={({ item }) =>
-        renderItem(item as keyof AnimeSearchParams, values, onChange)
-      }
+      renderItem={({ item }) => {
+        const itemKey = item as keyof AnimeSearchParams;
+        if (values[itemKey] === undefined) return null;
+
+        return renderItem(itemKey, values, onChange);
+      }}
       style={{ marginTop: activeFilters.length > 0 ? 16 : 0 }}
       contentContainerStyle={{
         gap: 8,
