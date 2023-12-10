@@ -126,7 +126,7 @@ function Filters({ values, onSubmit, onClear }: Props) {
             />
 
             <AnimeGenresSelect
-              values={values}
+              initialValues={values}
               onApply={onSubmitHandler}
               trigger={renderGenresTrigger}
             />
