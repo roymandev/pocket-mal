@@ -9,9 +9,8 @@ import {
   Text,
 } from 'react-native-paper';
 
-import AnimeGenresSelect, {
-  AnimeGenresSelectTriggerProps,
-} from '@/components/AnimeGenresSelect';
+import AnimeGenresSelect from '@/components/AnimeGenresSelect';
+import { AnimeGenresSelectTriggerProps } from '@/components/AnimeGenresSelect/types';
 import AnimeOrderSelect, {
   AnimeOrderSelectTriggerProps,
 } from '@/components/AnimeOrderSelect';
@@ -48,14 +47,14 @@ const renderOrderTrigger = ({
 );
 
 const renderGenresTrigger = ({
-  selectedLength,
+  initialValuesLength,
   onPress,
 }: AnimeGenresSelectTriggerProps) => (
   <List.Item
     style={LIST_STYLE}
     title="Genres"
     onPress={onPress}
-    right={() => selectedLength && <Chip>{selectedLength}</Chip>}
+    right={() => !!initialValuesLength && <Chip>{initialValuesLength}</Chip>}
   />
 );
 
@@ -126,9 +125,17 @@ function Filters({ values, onSubmit, onClear }: Props) {
             />
 
             <AnimeGenresSelect
-              initialValues={values}
-              onApply={onSubmitHandler}
-              trigger={renderGenresTrigger}
+              initialValues={{
+                genres: values.genres?.split(','),
+                genres_exclude: values.genres_exclude?.split(','),
+              }}
+              onApply={(newValues) => {
+                onSubmitHandler({
+                  genres: newValues.genres?.join(','),
+                  genres_exclude: newValues.genres_exclude?.join(','),
+                });
+              }}
+              renderTrigger={renderGenresTrigger}
             />
           </List.Section>
         </BottomSheetScrollView>
