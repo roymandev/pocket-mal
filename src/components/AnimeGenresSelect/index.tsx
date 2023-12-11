@@ -8,6 +8,11 @@ import PaperBottomSheetModal from '../PaperBottomSheetModal';
 import Form from './Form';
 import { AnimeGenresSelectTriggerProps, AnimeGenresSelectValue } from './types';
 
+const EMPTY_VALUES: AnimeGenresSelectValue = {
+  genres: undefined,
+  genres_exclude: undefined,
+};
+
 type Props = {
   initialValues: AnimeGenresSelectValue;
   onApply: (values: AnimeGenresSelectValue) => void;
@@ -18,14 +23,24 @@ function AnimeGenresSelect({ initialValues, onApply, renderTrigger }: Props) {
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const [values, setValues] = useSetState({
-    genres: initialValues.genres,
-    genres_exclude: initialValues.genres_exclude,
-  });
+  const initialValuesLength =
+    (initialValues.genres?.length || 0) +
+    (initialValues.genres_exclude?.length || 0);
+
+  const [values, setValues] = useSetState(EMPTY_VALUES);
+
+  const onTriggerPressHandler = () => {
+    bottomSheetRef.current?.present();
+    setValues(initialValues);
+  };
 
   const onApplyHanlder = () => {
     onApply(values);
     bottomSheetRef.current?.close();
+  };
+
+  const onClearHandler = () => {
+    setValues(EMPTY_VALUES);
   };
 
   // render
@@ -35,12 +50,7 @@ function AnimeGenresSelect({ initialValues, onApply, renderTrigger }: Props) {
         {...props}
         clearButtonProps={{
           disabled: !values.genres?.length && !values.genres_exclude?.length,
-          onPress: () => {
-            setValues({
-              genres: undefined,
-              genres_exclude: undefined,
-            });
-          },
+          onPress: onClearHandler,
         }}
         applyButtonProps={{
           onPress: onApplyHanlder,
@@ -53,10 +63,8 @@ function AnimeGenresSelect({ initialValues, onApply, renderTrigger }: Props) {
   return (
     <>
       {renderTrigger({
-        initialValuesLength:
-          (initialValues.genres?.length || 0) +
-          (initialValues.genres_exclude?.length || 0),
-        onPress: () => bottomSheetRef.current?.present(),
+        initialValuesLength,
+        onPress: onTriggerPressHandler,
       })}
 
       <PaperBottomSheetModal

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { Button, Chip, Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Chip, Text } from 'react-native-paper';
 
 import { useAnimeGenres } from '@/queries/animeQueries';
 
@@ -18,7 +18,10 @@ function Form({ values, onChange }: Props) {
   const { data: explicitGenres } = useAnimeGenres({
     filter: 'explicit_genres',
   });
-  const { data: genresData } = useAnimeGenres(undefined, !!explicitGenres);
+  const { data: genresData, isLoading } = useAnimeGenres(
+    undefined,
+    !!explicitGenres
+  );
 
   const transformedGenres = useMemo(() => {
     if (!genresData) return [];
@@ -36,6 +39,9 @@ function Form({ values, onChange }: Props) {
       return acc;
     }, []);
   }, [genresData]);
+
+  if (isLoading)
+    return <ActivityIndicator size="large" style={{ marginVertical: 32 }} />;
 
   return (
     <View
