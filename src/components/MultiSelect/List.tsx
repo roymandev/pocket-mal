@@ -7,45 +7,47 @@ import { MultiSelectItem } from './types';
 
 type Props = {
   options: MultiSelectItem[];
-  values: string[];
+  initialValues: string[];
   onChange: (values: string[]) => void;
 };
 
-function List({ options, values, onChange }: Props) {
-  const [data, setData] = useState<MultiSelectItem[]>(
-    options.map((option) => ({
-      ...option,
-      selected: values.some((value) => value === option.value),
-    }))
-  );
+function List({ options, initialValues, onChange }: Props) {
+  const [data, setData] = useState<MultiSelectItem[]>([]);
 
+  // Initialize data
   useEffect(() => {
-    onChange(
-      data.reduce<string[]>((acc, curr) => {
-        if (curr.selected) {
-          acc.push(curr.value);
-        }
-        return acc;
-      }, [])
+    setData(
+      options.map((option) => ({
+        ...option,
+        selected: initialValues.some((value) => value === option.value),
+      }))
     );
-  }, [data]);
+  }, [initialValues]);
 
-  const onPress = useCallback(
-    (item: MultiSelectItem) => {
-      setData((prev) =>
-        prev.map((i) =>
-          i.value === item.value ? { ...i, selected: !i.selected } : i
-        )
+  const onItemPress = useCallback((item: MultiSelectItem) => {
+    setData((prev) => {
+      const updatedData = prev.map((i) =>
+        i.value === item.value ? { ...i, selected: !i.selected } : i
       );
-    },
-    [options]
-  );
+
+      onChange(
+        updatedData.reduce<string[]>((acc, curr) => {
+          if (curr.selected) {
+            acc.push(curr.value);
+          }
+          return acc;
+        }, [])
+      );
+
+      return updatedData;
+    });
+  }, []);
 
   return (
     <BottomSheetFlatList
       data={data}
       keyExtractor={(item) => item.value}
-      renderItem={({ item }) => <Item item={item} onPress={onPress} />}
+      renderItem={({ item }) => <Item item={item} onPress={onItemPress} />}
     />
   );
 }

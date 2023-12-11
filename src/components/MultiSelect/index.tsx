@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
@@ -26,15 +26,15 @@ function MultiSelect({
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const [_values, setValues] = useState(initialValues);
+  const values = useRef(initialValues);
 
   const triggerPressHandler = () => {
     bottomSheetRef.current?.present();
-    setValues(initialValues);
+    values.current = initialValues;
   };
 
   const dismisHandler = () => {
-    onChange(_values);
+    onChange(values.current);
   };
 
   return (
@@ -46,7 +46,13 @@ function MultiSelect({
         snapPoints={['50%', '100%']}
         onDismiss={dismisHandler}
       >
-        <List options={options} values={_values} onChange={setValues} />
+        <List
+          options={options}
+          initialValues={initialValues}
+          onChange={(newValues) => {
+            values.current = newValues;
+          }}
+        />
       </PaperBottomSheetModal>
     </>
   );
