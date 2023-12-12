@@ -1,20 +1,27 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { ActivityIndicator, Button, Chip, Text } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  Chip,
+  Divider,
+  Text,
+} from 'react-native-paper';
 
+import { ObjectStateUpdate } from '@/hooks/useObjectState';
 import { useAnimeGenres } from '@/queries/animeQueries';
 
 import { FILTER_FOOTER_HEIGHT } from '../FilterFooter';
 import MultiSelect from '../MultiSelect';
 import { MultiSelectItem } from '../MultiSelect/types';
-import { AnimeGenresSelectValue } from './types';
+import { ParsedValues } from './types';
 
 type Props = {
-  values: AnimeGenresSelectValue;
-  onChange: (value: AnimeGenresSelectValue) => void;
+  values: ParsedValues;
+  updateValues: ObjectStateUpdate<ParsedValues>;
 };
 
-function Form({ values, onChange }: Props) {
+function Form({ values, updateValues }: Props) {
   const { data: explicitGenres } = useAnimeGenres({
     filter: 'explicit_genres',
   });
@@ -62,8 +69,53 @@ function Form({ values, onChange }: Props) {
 
         <MultiSelect
           options={transformedGenres}
-          initialValues={values.genres || []}
-          onChange={(genres) => onChange({ genres })}
+          initialValues={values.genres}
+          unavailableValues={values.genres_exclude}
+          onChange={(genres) => updateValues('genres', genres)}
+          renderTrigger={({ onPress }) => (
+            <Button onPress={onPress}>Add</Button>
+          )}
+        />
+      </View>
+
+      {values.genres && values.genres.length > 0 && (
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 8,
+            marginTop: 8,
+          }}
+        >
+          {values.genres.map((id) => {
+            const deselect = () =>
+              updateValues('genres', values.genres?.filter((i) => i !== id));
+            return (
+              <Chip key={id} onClose={deselect} onPress={deselect}>
+                {transformedGenres.find((i) => i.value === id)?.text}
+              </Chip>
+            );
+          })}
+        </View>
+      )}
+
+      <Divider style={{ marginVertical: 16 }} />
+
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text variant="titleMedium">Exclude genres</Text>
+        <MultiSelect
+          options={transformedGenres}
+          initialValues={values.genres_exclude || []}
+          unavailableValues={values.genres || []}
+          onChange={(genres_exclude) =>
+            updateValues('genres_exclude', genres_exclude)
+          }
           renderTrigger={({ onPress }) => (
             <Button onPress={onPress}>Add</Button>
           )}
@@ -78,12 +130,12 @@ function Form({ values, onChange }: Props) {
           marginTop: 8,
         }}
       >
-        {values.genres?.map((id) => {
-          const deselect = () => {
-            onChange({
-              genres: values.genres?.filter((i) => i !== id),
-            });
-          };
+        {values.genres_exclude?.map((id) => {
+          const deselect = () =>
+            updateValues(
+              'genres_exclude',
+              values.genres_exclude?.filter((i) => i !== id)
+            );
           return (
             <Chip key={id} onClose={deselect} onPress={deselect}>
               {transformedGenres.find((i) => i.value === id)?.text}

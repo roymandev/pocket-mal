@@ -125,16 +125,8 @@ function Filters({ values, onSubmit, onClear }: Props) {
             />
 
             <AnimeGenresSelect
-              initialValues={{
-                genres: values.genres?.split(','),
-                genres_exclude: values.genres_exclude?.split(','),
-              }}
-              onApply={(newValues) => {
-                onSubmitHandler({
-                  genres: newValues.genres?.join(','),
-                  genres_exclude: newValues.genres_exclude?.join(','),
-                });
-              }}
+              initialValues={values}
+              onApply={onSubmitHandler}
               renderTrigger={renderGenresTrigger}
             />
           </List.Section>

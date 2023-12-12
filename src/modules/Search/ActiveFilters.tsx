@@ -25,16 +25,8 @@ const renderItem = (
       if (item === 'genres_exclude' && values.genres) return null;
       return (
         <AnimeGenresSelect
-          initialValues={{
-            genres: values.genres?.split(','),
-            genres_exclude: values.genres_exclude?.split(','),
-          }}
-          onApply={(newValues) => {
-            onChange({
-              genres: newValues.genres?.join(','),
-              genres_exclude: newValues.genres_exclude?.join(','),
-            });
-          }}
+          initialValues={values}
+          onApply={onChange}
           renderTrigger={({ initialValuesLength: valuesLength, onPress }) => (
             <Chip onPress={onPress}>Genres: {valuesLength}</Chip>
           )}

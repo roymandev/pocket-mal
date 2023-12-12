@@ -1,21 +1,19 @@
-import { useCallback, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
-import { useSetState } from '@/hooks/useSetState';
+import { useObjectState } from '@/hooks/useObjectState';
 import { BottomSheetFooterProps, BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import FilterFooter from '../FilterFooter';
 import PaperBottomSheetModal from '../PaperBottomSheetModal';
 import Form from './Form';
-import { AnimeGenresSelectTriggerProps, AnimeGenresSelectValue } from './types';
-
-const EMPTY_VALUES: AnimeGenresSelectValue = {
-  genres: undefined,
-  genres_exclude: undefined,
-};
+import {
+  AnimeGenresSelectTriggerProps,
+  AnimeGenresSelectValues,
+} from './types';
 
 type Props = {
-  initialValues: AnimeGenresSelectValue;
-  onApply: (values: AnimeGenresSelectValue) => void;
+  initialValues: AnimeGenresSelectValues;
+  onApply: (values: AnimeGenresSelectValues) => void;
   renderTrigger: (props: AnimeGenresSelectTriggerProps) => React.ReactNode;
 };
 
@@ -23,47 +21,59 @@ function AnimeGenresSelect({ initialValues, onApply, renderTrigger }: Props) {
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const initialValuesLength =
-    (initialValues.genres?.length || 0) +
-    (initialValues.genres_exclude?.length || 0);
+  const parsedValues = useMemo(
+    () => ({
+      genres: initialValues.genres?.split(',') || [],
+      genres_exclude: initialValues.genres_exclude?.split(',') || [],
+    }),
+    [initialValues]
+  );
 
-  const [values, setValues] = useSetState(EMPTY_VALUES);
+  const [values, handleValues] = useObjectState(parsedValues);
 
   const onTriggerPressHandler = () => {
     bottomSheetRef.current?.present();
-    setValues(initialValues);
+    handleValues.set(parsedValues);
   };
 
   const onApplyHanlder = () => {
-    onApply(values);
+    const newValues = {
+      genres: values.genres.length ? values.genres.join(',') : undefined,
+      genres_exclude: values.genres_exclude.length
+        ? values.genres_exclude.join(',')
+        : undefined,
+    };
+
+    onApply(newValues);
     bottomSheetRef.current?.close();
   };
 
   const onClearHandler = () => {
-    setValues(EMPTY_VALUES);
+    handleValues.set({
+      genres: [],
+      genres_exclude: [],
+    });
   };
 
   // render
-  const renderFooter = useCallback(
-    (props: BottomSheetFooterProps) => (
-      <FilterFooter
-        {...props}
-        clearButtonProps={{
-          disabled: !values.genres?.length && !values.genres_exclude?.length,
-          onPress: onClearHandler,
-        }}
-        applyButtonProps={{
-          onPress: onApplyHanlder,
-        }}
-      />
-    ),
-    [values, bottomSheetRef.current]
+  const renderFooter = (props: BottomSheetFooterProps) => (
+    <FilterFooter
+      {...props}
+      clearButtonProps={{
+        disabled: !values.genres?.length && !values.genres_exclude?.length,
+        onPress: onClearHandler,
+      }}
+      applyButtonProps={{
+        onPress: onApplyHanlder,
+      }}
+    />
   );
 
   return (
     <>
       {renderTrigger({
-        initialValuesLength,
+        initialValuesLength:
+          parsedValues.genres.length + parsedValues.genres_exclude.length,
         onPress: onTriggerPressHandler,
       })}
 
@@ -72,7 +82,7 @@ function AnimeGenresSelect({ initialValues, onApply, renderTrigger }: Props) {
         snapPoints={['60%', '100%']}
         footerComponent={renderFooter}
       >
-        <Form values={values} onChange={setValues} />
+        <Form values={values} updateValues={handleValues.update} />
       </PaperBottomSheetModal>
     </>
   );

@@ -1,6 +1,11 @@
-export type AnimeGenresSelectValue = {
-  genres?: string[];
-  genres_exclude?: string[];
+export type AnimeGenresSelectValues = {
+  genres?: string;
+  genres_exclude?: string;
+};
+
+export type ParsedValues = {
+  genres: string[];
+  genres_exclude: string[];
 };
 
 export type AnimeGenresSelectTriggerProps = {
