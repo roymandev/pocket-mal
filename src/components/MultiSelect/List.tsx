@@ -8,21 +8,33 @@ import { MultiSelectItem } from './types';
 type Props = {
   options: MultiSelectItem[];
   initialValues: string[];
+  unavailableValues?: string[];
   onChange: (values: string[]) => void;
 };
 
-function List({ options, initialValues, onChange }: Props) {
+function List({ options, initialValues, unavailableValues, onChange }: Props) {
   const [data, setData] = useState<MultiSelectItem[]>([]);
 
   // Initialize data
   useEffect(() => {
     setData(
-      options.map((option) => ({
-        ...option,
-        selected: initialValues.some((value) => value === option.value),
-      }))
+      options.map((option) => {
+        const isSelected = initialValues.some(
+          (value) => value === option.value
+        );
+
+        const isUnavailable = unavailableValues?.some(
+          (value) => value === option.value
+        );
+
+        return {
+          ...option,
+          selected: isSelected,
+          unavailable: isUnavailable,
+        };
+      })
     );
-  }, [initialValues]);
+  }, [initialValues, unavailableValues]);
 
   const onItemPress = useCallback((item: MultiSelectItem) => {
     setData((prev) => {
@@ -30,14 +42,14 @@ function List({ options, initialValues, onChange }: Props) {
         i.value === item.value ? { ...i, selected: !i.selected } : i
       );
 
-      onChange(
-        updatedData.reduce<string[]>((acc, curr) => {
-          if (curr.selected) {
-            acc.push(curr.value);
-          }
-          return acc;
-        }, [])
-      );
+      const newValues = updatedData.reduce<string[]>((acc, curr) => {
+        if (curr.selected) {
+          acc.push(curr.value);
+        }
+        return acc;
+      }, []);
+
+      onChange(newValues);
 
       return updatedData;
     });

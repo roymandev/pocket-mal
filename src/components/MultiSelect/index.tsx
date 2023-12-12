@@ -13,15 +13,16 @@ type MultiSelectTriggerProps = {
 type Props = {
   options: MultiSelectItem[];
   initialValues: string[];
+  unavailableValues?: string[];
   onChange: (values: string[]) => void;
   renderTrigger: (props: MultiSelectTriggerProps) => React.ReactNode;
 };
 
 function MultiSelect({
-  options,
   initialValues,
   onChange,
   renderTrigger,
+  ...rest
 }: Props) {
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -47,11 +48,11 @@ function MultiSelect({
         onDismiss={dismisHandler}
       >
         <List
-          options={options}
           initialValues={initialValues}
           onChange={(newValues) => {
             values.current = newValues;
           }}
+          {...rest}
         />
       </PaperBottomSheetModal>
     </>
