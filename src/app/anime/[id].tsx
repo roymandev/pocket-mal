@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Button, Chip, Text, useTheme } from 'react-native-paper';
 
 import { StackHeaderProps } from '@react-navigation/stack';
 
@@ -81,7 +81,10 @@ function AnimeDetail() {
         <FlatList
           data={data?.genres}
           horizontal
-          renderItem={({ item }) => <Text>{item.name}</Text>}
+          renderItem={({ item }) => <Chip>{item.name}</Chip>}
+          contentContainerStyle={{
+            gap: 8,
+          }}
         />
 
         <View style={{ gap: 4 }}>
