@@ -56,7 +56,14 @@ function InfiniteAnime<T extends CardAnimeProps['anime']>({
       <CardAnime
         anime={params.item}
         sx={{ container: { width: width / 2 - 24, marginBottom: 16 } }}
-        onPress={() => router.push(`/anime/${params.item.mal_id}`)}
+        onPress={() =>
+          router.push({
+            pathname: '/anime/[id]',
+            params: {
+              id: params.item.mal_id as number,
+            },
+          })
+        }
       />
     ),
     [width]

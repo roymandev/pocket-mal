@@ -41,7 +41,14 @@ function CurrentSeasonAnime() {
           <CardAnime
             anime={item}
             sx={{ container: { width: 150 } }}
-            onPress={() => router.push(`/anime/${item.mal_id}`)}
+            onPress={() =>
+              router.push({
+                pathname: '/anime/[id]',
+                params: {
+                  id: item.mal_id as number,
+                },
+              })
+            }
           />
         )}
         contentContainerStyle={{
