@@ -2,40 +2,32 @@ import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
-import { useSetState } from '@/hooks/useSetState';
 import { AnimeSearchParams } from '@/types/api.types';
-import { useDebouncedValue, useUncontrolled } from '@mantine/hooks';
+import { updateObject } from '@/utils/updateObject';
+import { useDebouncedValue } from '@mantine/hooks';
 
-import ActiveFilters from './ActiveFilters';
 import Filters from './Filters';
+import ActiveFilters from './Filters/ActiveFilters';
 
 type Props = {
-  value?: AnimeSearchParams;
-  onSubmit?: (value: AnimeSearchParams) => void;
+  onSubmit: (value: AnimeSearchParams) => void;
 };
 
-function Form({ value, onSubmit }: Props) {
-  const [_value, setValue] = useUncontrolled({
-    value,
-    defaultValue: {},
-    onChange: onSubmit,
-  });
-
+function Form({ onSubmit }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 500);
 
-  const [params, setParams, overrideParams] =
-    useSetState<AnimeSearchParams>(_value);
+  const [filters, setFilters] = useState<AnimeSearchParams>({});
 
   useEffect(() => {
-    setValue({
-      ...params,
-      q: debouncedSearchQuery,
-    });
-  }, [params, debouncedSearchQuery]);
+    onSubmit({ ...filters, q: debouncedSearchQuery });
+  }, [filters, debouncedSearchQuery]);
+
+  const updateParams = (values: AnimeSearchParams) =>
+    setFilters((prev) => updateObject(prev, values));
 
   return (
-    <View>
+    <View style={{ gap: 16 }}>
       <View
         style={{
           flexDirection: 'row',
@@ -50,13 +42,13 @@ function Form({ value, onSubmit }: Props) {
         />
 
         <Filters
-          values={params}
-          onSubmit={setParams}
-          onClear={() => overrideParams({})}
+          filters={filters}
+          onUpdateFilter={updateParams}
+          onClear={() => setFilters({})}
         />
       </View>
 
-      <ActiveFilters values={params} onChange={setParams} />
+      <ActiveFilters filters={filters} onUpdateFilter={updateParams} />
     </View>
   );
 }

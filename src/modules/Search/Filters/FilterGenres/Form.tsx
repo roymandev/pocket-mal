@@ -11,9 +11,9 @@ import {
 import { ObjectStateUpdate } from '@/hooks/useObjectState';
 import { useAnimeGenres } from '@/queries/animeQueries';
 
-import { FILTER_FOOTER_HEIGHT } from '../FilterFooter';
-import MultiSelect from '../MultiSelect';
-import { MultiSelectItem } from '../MultiSelect/types';
+import { FILTER_FOOTER_HEIGHT } from '../../../../components/FilterFooter';
+import MultiSelect from '../../../../components/MultiSelect';
+import { MultiSelectItem } from '../../../../components/MultiSelect/types';
 import { ParsedValues } from './types';
 
 type Props = {

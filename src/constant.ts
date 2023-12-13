@@ -27,6 +27,7 @@ export const ANIME_SORT: components['schemas']['search_query_sort'][] = [
   'asc',
   'desc',
 ];
+export type AnimeSort = (typeof ANIME_SORT)[number];
 
 export const DEFAULT_ANIME_ORDERBY: keyof typeof ANIME_ORDERBY = 'members';
 

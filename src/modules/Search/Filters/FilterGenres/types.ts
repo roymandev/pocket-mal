@@ -1,4 +1,4 @@
-export type AnimeGenresSelectValues = {
+export type FilterGenres = {
   genres?: string;
   genres_exclude?: string;
 };
@@ -8,7 +8,7 @@ export type ParsedValues = {
   genres_exclude: string[];
 };
 
-export type AnimeGenresSelectTriggerProps = {
+export type FilterGenresTriggerProps = {
   initialValuesLength: number;
-  onPress: () => void;
+  openFilter: () => void;
 };

@@ -3,6 +3,8 @@ import { Keyboard, View } from 'react-native';
 import { SegmentedButtons, Text } from 'react-native-paper';
 
 import ChipSelect from '@/components/ChipSelect';
+import FilterFooter from '@/components/FilterFooter';
+import PaperBottomSheetModal from '@/components/PaperBottomSheetModal';
 import {
   ANIME_ORDERBY,
   ANIME_SORT,
@@ -10,37 +12,29 @@ import {
   DEFAULT_ANIME_SORT,
 } from '@/constant';
 import { useSetState } from '@/hooks/useSetState';
-import { capitalize } from '@/utils/formatter';
 import {
   BottomSheetFooterProps,
   BottomSheetModal,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 
-import FilterFooter from './FilterFooter';
-import PaperBottomSheetModal from './PaperBottomSheetModal';
-
-type Value = {
+type Values = {
   order_by?: AnimeOrderby;
   sort?: typeof DEFAULT_ANIME_SORT;
 };
 
-export type AnimeOrderSelectTriggerProps = {
-  current: {
-    value: Value;
-    text: string;
-  };
-  onPress: () => void;
+export type FilterOrderTriggerProps = {
+  openFilter: () => void;
 };
 
 type Props = {
-  value: Value;
-  onChange: (value: Value) => void;
-  trigger: (props: AnimeOrderSelectTriggerProps) => React.ReactNode;
+  initialValues: Values;
+  onApply: (values: Values) => void;
+  renderTrigger: (props: FilterOrderTriggerProps) => JSX.Element;
 };
 
-function AnimeOrderSelect({ value, onChange, trigger }: Props) {
-  const [order, setOrder, overrideOrder] = useSetState(value);
+function FilterOrder({ initialValues, onApply, renderTrigger }: Props) {
+  const [order, setOrder, overrideOrder] = useSetState(initialValues);
 
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -49,7 +43,7 @@ function AnimeOrderSelect({ value, onChange, trigger }: Props) {
   const handlePresentModalPress = () => {
     Keyboard.dismiss();
     bottomSheetRef.current?.present();
-    setOrder(value);
+    setOrder(initialValues);
   };
 
   const onSelectHanlder = (orderby?: AnimeOrderby) => {
@@ -73,24 +67,18 @@ function AnimeOrderSelect({ value, onChange, trigger }: Props) {
         }}
         applyButtonProps={{
           onPress: () => {
-            onChange(order);
+            onApply(order);
             bottomSheetRef.current?.close();
           },
         }}
       />
     ),
-    [order, onChange, bottomSheetRef.current]
+    [order, onApply, bottomSheetRef.current]
   );
 
   return (
     <>
-      {trigger({
-        current: {
-          value,
-          text: capitalize(ANIME_ORDERBY[value.order_by as AnimeOrderby]),
-        },
-        onPress: handlePresentModalPress,
-      })}
+      {renderTrigger({ openFilter: handlePresentModalPress })}
 
       <PaperBottomSheetModal
         ref={bottomSheetRef}
@@ -136,4 +124,4 @@ function AnimeOrderSelect({ value, onChange, trigger }: Props) {
   );
 }
 
-export default AnimeOrderSelect;
+export default FilterOrder;

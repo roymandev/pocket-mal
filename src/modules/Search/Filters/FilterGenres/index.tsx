@@ -3,21 +3,21 @@ import { useMemo, useRef } from 'react';
 import { useObjectState } from '@/hooks/useObjectState';
 import { BottomSheetFooterProps, BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import FilterFooter from '../FilterFooter';
-import PaperBottomSheetModal from '../PaperBottomSheetModal';
+import FilterFooter from '../../../../components/FilterFooter';
+import PaperBottomSheetModal from '../../../../components/PaperBottomSheetModal';
 import Form from './Form';
 import {
-  AnimeGenresSelectTriggerProps,
-  AnimeGenresSelectValues,
+  FilterGenresTriggerProps,
+  FilterGenres as FilterGenresValues,
 } from './types';
 
 type Props = {
-  initialValues: AnimeGenresSelectValues;
-  onApply: (values: AnimeGenresSelectValues) => void;
-  renderTrigger: (props: AnimeGenresSelectTriggerProps) => React.ReactNode;
+  initialValues: FilterGenresValues;
+  onApply: (values: FilterGenresValues) => void;
+  renderTrigger: (props: FilterGenresTriggerProps) => React.ReactNode;
 };
 
-function AnimeGenresSelect({ initialValues, onApply, renderTrigger }: Props) {
+function FilterGenres({ initialValues, onApply, renderTrigger }: Props) {
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -74,7 +74,7 @@ function AnimeGenresSelect({ initialValues, onApply, renderTrigger }: Props) {
       {renderTrigger({
         initialValuesLength:
           parsedValues.genres.length + parsedValues.genres_exclude.length,
-        onPress: onTriggerPressHandler,
+        openFilter: onTriggerPressHandler,
       })}
 
       <PaperBottomSheetModal
@@ -88,4 +88,4 @@ function AnimeGenresSelect({ initialValues, onApply, renderTrigger }: Props) {
   );
 }
 
-export default AnimeGenresSelect;
+export default FilterGenres;
