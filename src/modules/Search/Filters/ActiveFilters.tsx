@@ -2,9 +2,9 @@ import { Chip } from 'react-native-paper';
 
 import { FlatList } from 'react-native-gesture-handler';
 
-import FilterGenres from '@/modules/Search/Filters/FilterGenres';
 import { AnimeSearchParams } from '@/types/api.types';
 
+import ChipActiveGenres from './FilterGenres/ChipActiveGenres';
 import FilterOrder from './FilterOrder';
 
 type Props = {
@@ -38,16 +38,7 @@ const renderItem = (
     case 'genres':
     case 'genres_exclude':
       if (item === 'genres_exclude' && filters.genres) return null;
-      return (
-        <FilterGenres
-          initialValues={filters}
-          onApply={onUpdateFilter}
-          renderTrigger={({
-            initialValuesLength: valuesLength,
-            openFilter: onPress,
-          }) => <Chip onPress={onPress}>Genres: {valuesLength}</Chip>}
-        />
-      );
+      return <ChipActiveGenres value={filters} onChange={onUpdateFilter} />;
 
     default:
       return null;

@@ -1,7 +1,7 @@
 import { jikanRest } from '@/utils/jikanApi';
 import { useQuery } from '@tanstack/react-query';
 
-export const useAnimeGenres = () =>
+export const useAnimeGenres = (props?: { enabled?: boolean }) =>
   useQuery({
     queryKey: ['genres', 'anime'],
     queryFn: async () => {
@@ -23,4 +23,5 @@ export const useAnimeGenres = () =>
         ) || []
       );
     },
+    enabled: props?.enabled,
   });

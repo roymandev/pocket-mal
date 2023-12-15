@@ -9,6 +9,10 @@ export type ParsedValues = {
 };
 
 export type FilterGenresTriggerProps = {
+  initialValues?: {
+    genres?: string[];
+    genres_exclude?: string[];
+  };
   initialValuesLength: number;
   openFilter: () => void;
 };

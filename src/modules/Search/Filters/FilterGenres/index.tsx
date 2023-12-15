@@ -72,6 +72,7 @@ function FilterGenres({ initialValues, onApply, renderTrigger }: Props) {
   return (
     <>
       {renderTrigger({
+        initialValues: parsedValues,
         initialValuesLength:
           parsedValues.genres.length + parsedValues.genres_exclude.length,
         openFilter: onTriggerPressHandler,
