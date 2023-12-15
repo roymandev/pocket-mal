@@ -16,11 +16,11 @@ type Props = {
   onClear: () => void;
 };
 
-function Filters({ filters: values, onUpdateFilter, onClear }: Props) {
+function Filters({ filters, onUpdateFilter, onClear }: Props) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const activeFilters = Object.keys(values).filter(
-    (key) => values[key as keyof Values] !== undefined
+  const activeFilters = Object.keys(filters).filter(
+    (key) => filters[key as keyof Values] !== undefined
   );
 
   const updateFilterHandler: typeof onUpdateFilter = (filter) => {
@@ -68,7 +68,7 @@ function Filters({ filters: values, onUpdateFilter, onClear }: Props) {
             </Button>
           </View>
 
-          <List filters={values} onUpdateFilter={updateFilterHandler} />
+          <List filters={filters} onUpdateFilter={updateFilterHandler} />
         </BottomSheetScrollView>
       </PaperBottomSheetModal>
     </>
