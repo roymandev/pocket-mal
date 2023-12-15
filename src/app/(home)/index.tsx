@@ -1,7 +1,7 @@
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import CurrentSeasonAnime from '@/components/Home/CurrentSeasonAnime';
+import CurrentSeasonAnime from '@/modules/Home/CurrentSeasonAnime';
 
 export default function App() {
   return (
