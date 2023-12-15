@@ -18,6 +18,8 @@ function Form({ value, onChange }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 500);
 
+  const { q: _, ...filters } = value;
+
   const updateValue = (values: AnimeSearchParams) =>
     onChange((prev) => updateObject(prev, values));
 
@@ -43,13 +45,13 @@ function Form({ value, onChange }: Props) {
         />
 
         <Filters
-          filters={value}
+          filters={filters}
           onUpdateFilter={updateValue}
           onClear={() => onChange({})}
         />
       </View>
 
-      <ActiveFilters filters={value} onUpdateFilter={updateValue} />
+      <ActiveFilters filters={filters} onUpdateFilter={updateValue} />
     </View>
   );
 }
