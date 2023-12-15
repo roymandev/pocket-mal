@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
@@ -10,21 +10,22 @@ import Filters from './Filters';
 import ActiveFilters from './Filters/ActiveFilters';
 
 type Props = {
-  onSubmit: (value: AnimeSearchParams) => void;
+  value: AnimeSearchParams;
+  onChange: Dispatch<SetStateAction<AnimeSearchParams>>;
 };
 
-function Form({ onSubmit }: Props) {
+function Form({ value, onChange }: Props) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 500);
 
-  const [filters, setFilters] = useState<AnimeSearchParams>({});
+  const updateValue = (values: AnimeSearchParams) =>
+    onChange((prev) => updateObject(prev, values));
 
   useEffect(() => {
-    onSubmit({ ...filters, q: debouncedSearchQuery });
-  }, [filters, debouncedSearchQuery]);
-
-  const updateParams = (values: AnimeSearchParams) =>
-    setFilters((prev) => updateObject(prev, values));
+    updateValue({
+      q: debouncedSearchQuery,
+    });
+  }, [debouncedSearchQuery]);
 
   return (
     <View style={{ gap: 16 }}>
@@ -42,13 +43,13 @@ function Form({ onSubmit }: Props) {
         />
 
         <Filters
-          filters={filters}
-          onUpdateFilter={updateParams}
-          onClear={() => setFilters({})}
+          filters={value}
+          onUpdateFilter={updateValue}
+          onClear={() => onChange({})}
         />
       </View>
 
-      <ActiveFilters filters={filters} onUpdateFilter={updateParams} />
+      <ActiveFilters filters={value} onUpdateFilter={updateValue} />
     </View>
   );
 }

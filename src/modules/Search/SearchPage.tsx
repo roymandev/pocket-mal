@@ -25,7 +25,7 @@ function SearchPage() {
     <SafeAreaView
       style={{ flex: 1, gap: 16, marginHorizontal: 16, marginTop: 16 }}
     >
-      <Form onSubmit={setParams} />
+      <Form value={params} onChange={setParams} />
 
       <InfiniteAnime {...searchQuery} />
     </SafeAreaView>
