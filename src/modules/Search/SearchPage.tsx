@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import InfiniteAnime from '@/components/InfiniteAnime';
@@ -8,9 +9,15 @@ import { useInfiniteAnime } from '@/modules/Search/query';
 import { AnimeSearchParams } from '@/types/api.types';
 
 function SearchPage() {
+  const { query } = useLocalSearchParams<{ query?: string }>();
+
   const [params, setParams] = useState<AnimeSearchParams>({});
 
-  const query = useInfiniteAnime({
+  useEffect(() => {
+    if (query) setParams(JSON.parse(query));
+  }, [query]);
+
+  const searchQuery = useInfiniteAnime({
     ...params,
   });
 
@@ -20,7 +27,7 @@ function SearchPage() {
     >
       <Form onSubmit={setParams} />
 
-      <InfiniteAnime {...query} />
+      <InfiniteAnime {...searchQuery} />
     </SafeAreaView>
   );
 }
