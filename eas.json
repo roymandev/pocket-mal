@@ -1,9 +1,16 @@
 {
   "build": {
     "preview": {
+      "channel": "preview",
+      "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
+    },
+    "development": {
+      "extends": "preview",
+      "developmentClient": true,
+      "channel": "development"
     }
   }
 }

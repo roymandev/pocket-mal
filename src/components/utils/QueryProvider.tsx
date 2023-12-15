@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
 import { AppState, AppStateStatus, Platform } from 'react-native';
 
+import Config from 'Config';
+
 import { createExpoSQLitePersister } from '@/utils/queryPersister';
 import NetInfo from '@react-native-community/netinfo';
 import {
   QueryClient,
+  QueryClientProvider,
   focusManager,
   onlineManager,
 } from '@tanstack/react-query';
@@ -40,6 +43,11 @@ function QueryProvider({ children }: Props) {
     const subscription = AppState.addEventListener('change', onAppStateChange);
     return () => subscription.remove();
   }, []);
+
+  if (!Config.enablePresistentQuery)
+    return (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
 
   return (
     <PersistQueryClientProvider
