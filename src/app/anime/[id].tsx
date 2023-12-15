@@ -90,6 +90,8 @@ function AnimeDetail() {
                   params: {
                     query: JSON.stringify({
                       genres: item.mal_id?.toString(),
+                      order_by: 'members',
+                      sort: 'desc',
                     } satisfies AnimeSearchParams),
                   },
                 })
