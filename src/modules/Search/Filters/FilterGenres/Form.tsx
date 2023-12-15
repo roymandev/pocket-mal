@@ -9,7 +9,7 @@ import {
 } from 'react-native-paper';
 
 import { ObjectStateUpdate } from '@/hooks/useObjectState';
-import { useAnimeGenres } from '@/queries/animeQueries';
+import { useAnimeGenres } from '@/queries/genresQueries';
 
 import { FILTER_FOOTER_HEIGHT } from '../../../../components/FilterFooter';
 import MultiSelect from '../../../../components/MultiSelect';
@@ -22,21 +22,12 @@ type Props = {
 };
 
 function Form({ values, updateValues }: Props) {
-  const { data: explicitGenres } = useAnimeGenres({
-    filter: 'explicit_genres',
-  });
-  const { data: genresData, isLoading } = useAnimeGenres(
-    undefined,
-    !!explicitGenres
-  );
+  const { data: genres, isLoading } = useAnimeGenres();
 
   const transformedGenres = useMemo(() => {
-    if (!genresData) return [];
+    if (!genres) return [];
 
-    return genresData.reduce<MultiSelectItem[]>((acc, curr) => {
-      if (explicitGenres?.some((genre) => genre.mal_id === curr.mal_id)) {
-        return acc;
-      }
+    return genres.reduce<MultiSelectItem[]>((acc, curr) => {
       if (!curr.mal_id) return acc;
 
       acc.push({
@@ -45,7 +36,7 @@ function Form({ values, updateValues }: Props) {
       });
       return acc;
     }, []);
-  }, [genresData]);
+  }, [genres]);
 
   if (isLoading)
     return <ActivityIndicator size="large" style={{ marginVertical: 32 }} />;
@@ -71,7 +62,7 @@ function Form({ values, updateValues }: Props) {
           options={transformedGenres}
           initialValues={values.genres}
           unavailableValues={values.genres_exclude}
-          onChange={(genres) => updateValues('genres', genres)}
+          onChange={(value) => updateValues('genres', value)}
           renderTrigger={({ onPress }) => (
             <Button onPress={onPress}>Add</Button>
           )}
