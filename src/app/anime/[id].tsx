@@ -6,12 +6,13 @@ import { StackHeaderProps } from '@react-navigation/stack';
 
 import dayjs from 'dayjs';
 import { Image } from 'expo-image';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
 import PaperStackHeader from '@/components/PaperStackHeader';
 import PaperStack from '@/components/utils/PaperStack';
 import { useAnimeById } from '@/queries/animeQueries';
+import { AnimeSearchParams } from '@/types/api.types';
 
 function AnimeDetail() {
   const theme = useTheme();
@@ -81,7 +82,22 @@ function AnimeDetail() {
         <FlatList
           data={data?.genres}
           horizontal
-          renderItem={({ item }) => <Chip>{item.name}</Chip>}
+          renderItem={({ item }) => (
+            <Chip
+              onPress={() =>
+                router.push({
+                  pathname: '/(home)/search',
+                  params: {
+                    query: JSON.stringify({
+                      genres: item.mal_id?.toString(),
+                    } satisfies AnimeSearchParams),
+                  },
+                })
+              }
+            >
+              {item.name}
+            </Chip>
+          )}
           contentContainerStyle={{
             gap: 8,
           }}
