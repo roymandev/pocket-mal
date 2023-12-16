@@ -6,9 +6,10 @@ import { router } from 'expo-router';
 import { FlatList } from 'react-native-gesture-handler';
 
 import CardAnime from '@/components/Card/CardAnime';
-import { useSeasonNow } from '@/queries/seasonsQueries';
 import { capitalize } from '@/utils/formatter';
 import { getSeason } from '@/utils/getter';
+
+import { useSeasonNow } from './query';
 
 function CurrentSeasonAnime() {
   const currentDate = dayjs();
