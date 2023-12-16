@@ -32,7 +32,7 @@ type Props = {
 function ThemingProvider({ children }: Props) {
   const colorScheme = useColorScheme();
   const { theme: m3Theme } = useMaterial3Theme({
-    // fallbackSourceColor: '#0891b2',
+    fallbackSourceColor: '#D81159',
   });
   const [fontsLoaded, fontError] = useFonts({
     Rubik_400Regular,
