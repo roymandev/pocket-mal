@@ -15,7 +15,6 @@ export const useInfiniteAnime = (
 > => {
   const transformedParams: AnimeSearchParams = {
     ...params,
-    sfw: DEFAULT_ANIME_SFW,
     q: params?.q?.toLocaleLowerCase(),
   };
 
@@ -27,6 +26,7 @@ export const useInfiniteAnime = (
           query: {
             page: pageParam,
             ...transformedParams,
+            sfw: DEFAULT_ANIME_SFW,
           },
         },
       });

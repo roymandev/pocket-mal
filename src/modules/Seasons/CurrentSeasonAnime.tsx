@@ -13,6 +13,8 @@ import { useSeasonNow } from './query';
 
 function CurrentSeasonAnime() {
   const currentDate = dayjs();
+  const year = currentDate.year();
+  const season = getSeason(currentDate);
 
   const { data, isLoading } = useSeasonNow();
 
@@ -27,9 +29,11 @@ function CurrentSeasonAnime() {
         }}
       >
         <Text variant="titleMedium">
-          {capitalize(getSeason(currentDate))} {currentDate.year()} Anime
+          {capitalize(season)} {year} Anime
         </Text>
-        <Button onPress={() => router.push('/search')}>View All</Button>
+        <Button onPress={() => router.push(`/seasons/${year}/${season}`)}>
+          View All
+        </Button>
       </View>
 
       {isLoading && (
