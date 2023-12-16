@@ -2,6 +2,7 @@
   "build": {
     "preview": {
       "channel": "preview",
+      "withoutCredentials": true,
       "distribution": "internal",
       "android": {
         "buildType": "apk"

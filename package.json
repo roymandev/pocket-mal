@@ -11,7 +11,7 @@
     "lint": "eslint --ext .tsx --ext .ts src/ --fix",
     "typecheck": "tsc --noEmit --incremental false",
     "prepare": "husky install",
-    "build:dev": "eas build -p android --profile development --local",
+    "build:dev": "eas build -p android --profile development",
     "build:preview": "eas build -p android --profile preview"
   },
   "dependencies": {
