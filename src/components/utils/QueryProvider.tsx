@@ -27,7 +27,9 @@ const onAppStateChange = (status: AppStateStatus) => {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      gcTime: Config.enablePresistentQuery
+        ? 1000 * 60 * 60 * 24 // 24 hours
+        : 1000 * 60 * 5, // 5 minutes
     },
   },
 });
