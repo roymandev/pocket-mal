@@ -1,8 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
-import { Button, Chip, Text, useTheme } from 'react-native-paper';
-
-import { StackHeaderProps } from '@react-navigation/stack';
+import { Button, Chip, Text } from 'react-native-paper';
 
 import dayjs from 'dayjs';
 import { Image } from 'expo-image';
@@ -15,7 +13,6 @@ import { useAnimeById } from '@/queries/animeQueries';
 import { AnimeSearchParams } from '@/types/api.types';
 
 function AnimeDetail() {
-  const theme = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   if (!id) throw Error('id is required');
 
@@ -23,20 +20,13 @@ function AnimeDetail() {
 
   const { data } = useAnimeById(Number(id));
 
-  const renderHeader = useCallback(
-    (props: StackHeaderProps) => (
-      <PaperStackHeader {...props} sx={{ title: theme.fonts.titleMedium }} />
-    ),
-    [theme]
-  );
-
   return (
     <>
       <PaperStack.Screen
         options={{
           headerShown: true,
           title: data?.titles?.[0]?.title,
-          header: renderHeader,
+          header: (props) => <PaperStackHeader {...props} />,
         }}
       />
 
