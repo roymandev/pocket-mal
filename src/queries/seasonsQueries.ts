@@ -15,7 +15,7 @@ export const useSeasonNow = (
       const res = await jikanRest.GET('/seasons/now', {
         params: {
           query: {
-            limit: 5,
+            limit: 8,
             ...queryParams,
           },
         },

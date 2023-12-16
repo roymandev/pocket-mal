@@ -22,6 +22,7 @@ function CurrentSeasonAnime() {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
+          paddingHorizontal: 16,
         }}
       >
         <Text variant="titleMedium">
@@ -53,8 +54,10 @@ function CurrentSeasonAnime() {
         )}
         contentContainerStyle={{
           gap: 16,
+          paddingHorizontal: 16,
         }}
         horizontal
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );
