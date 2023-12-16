@@ -18,12 +18,11 @@ function SingleGenreChip({
 }) {
   const { data: genres, isLoading } = useAnimeGenres();
 
-  const genre =
-    genres?.find((g) => {
-      if (!g.mal_id) return false;
+  const genre = genres?.find((g) => {
+    if (!g.mal_id) return false;
 
-      return g.mal_id === Number(genreId);
-    })?.name || 'Invalid Genre';
+    return g.mal_id === Number(genreId);
+  })?.name;
 
   return (
     <Chip onPress={onPress}>
