@@ -14,13 +14,11 @@ export const useAnimeGenres = () =>
       });
       const genreRes = await jikanRest.GET('/genres/anime');
 
-      return (
-        genreRes.data?.data?.filter(
-          (genre) =>
-            !explicitGenreRes.data?.data?.some(
-              (expGenre) => expGenre.mal_id === genre.mal_id
-            )
-        ) || []
+      return genreRes.data?.data?.filter(
+        (genre) =>
+          !explicitGenreRes.data?.data?.some(
+            (expGenre) => expGenre.mal_id === genre.mal_id
+          )
       );
     },
   });

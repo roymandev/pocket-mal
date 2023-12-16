@@ -13,6 +13,6 @@ export const useAnimeById = (id: number) =>
         },
       });
 
-      return res.data?.data || null;
+      return res.data?.data;
     },
   });
