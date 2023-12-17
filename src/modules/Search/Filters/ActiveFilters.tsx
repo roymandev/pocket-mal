@@ -4,7 +4,7 @@ import { FlatList } from 'react-native-gesture-handler';
 
 import { AnimeSearchParams } from '@/types/api.types';
 
-import ChipActiveGenres from './FilterGenres/ChipActiveGenres';
+import FilterGenresChip from './FilterGenres/FilterGenresChip';
 import FilterOrder from './FilterOrder';
 
 type Props = {
@@ -38,7 +38,9 @@ const renderItem = (
     case 'genres':
     case 'genres_exclude':
       if (item === 'genres_exclude' && filters.genres) return null;
-      return <ChipActiveGenres value={filters} onChange={onUpdateFilter} />;
+      return (
+        <FilterGenresChip initialValues={filters} onApply={onUpdateFilter} />
+      );
 
     default:
       return null;

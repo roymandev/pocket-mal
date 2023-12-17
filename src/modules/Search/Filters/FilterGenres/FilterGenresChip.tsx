@@ -1,13 +1,9 @@
+import { ComponentPropsWithoutRef } from 'react';
 import { ActivityIndicator, Chip } from 'react-native-paper';
 
 import { useAnimeGenres } from '@/queries/genresQueries';
 
 import FilterGenres from '.';
-
-type Values = {
-  genres?: string;
-  genres_exclude?: string;
-};
 
 function SingleGenreChip({
   genreId,
@@ -31,16 +27,15 @@ function SingleGenreChip({
   );
 }
 
-type Props = {
-  value: Values;
-  onChange: (values: Values) => void;
-};
+type Props = Omit<
+  ComponentPropsWithoutRef<typeof FilterGenres>,
+  'renderTrigger'
+>;
 
-function ChipActiveGenres({ value, onChange }: Props) {
+function FilterGenresChip(props: Props) {
   return (
     <FilterGenres
-      initialValues={value}
-      onApply={onChange}
+      {...props}
       renderTrigger={({ initialValues, initialValuesLength, openFilter }) => {
         const genreId = initialValues?.genres?.[0];
 
@@ -53,4 +48,4 @@ function ChipActiveGenres({ value, onChange }: Props) {
   );
 }
 
-export default ChipActiveGenres;
+export default FilterGenresChip;
