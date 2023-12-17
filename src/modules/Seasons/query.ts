@@ -11,6 +11,7 @@ import {
 export const seasonsKeys = {
   all: ['seasons', 'all'] as const,
   now: ['seasons', 'now'] as const,
+  list: ['seasons', 'list'] as const,
 };
 
 export const useSeasonNow = (
@@ -60,4 +61,15 @@ export const useInfiniteSeason = (
       const nextPage = Number(lastPageParam) + 1;
       return nextPage;
     },
+  });
+
+export const useSeasonsList = (configs?: { enabled?: boolean }) =>
+  useQuery({
+    queryKey: seasonsKeys.list,
+    queryFn: async () => {
+      const res = await jikanRest.GET('/seasons');
+
+      return res.data?.data;
+    },
+    ...configs,
   });

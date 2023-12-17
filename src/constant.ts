@@ -13,6 +13,9 @@ export const ANIME_SCORES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
 export const ANIME_STATUS = ['airing', 'complete', 'upcoming'] as const;
 
+export const ANIME_SEASON = ['summer', 'winter', 'spring', 'fall'] as const;
+export type AnimeSeason = (typeof ANIME_SEASON)[number];
+
 export const ANIME_ORDERBY = {
   members: 'Members',
   score: 'Score',

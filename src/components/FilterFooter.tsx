@@ -13,6 +13,7 @@ type Props = BottomSheetFooterProps & {
     disabled?: boolean;
   };
   applyButtonProps?: {
+    disabled?: boolean;
     onPress?: () => void;
   };
 };
@@ -31,9 +32,11 @@ function FilterFooter({ clearButtonProps, applyButtonProps, ...rest }: Props) {
         backgroundColor: theme.colors.surface,
       }}
     >
-      <Button mode="text" {...clearButtonProps}>
-        Clear
-      </Button>
+      {clearButtonProps && (
+        <Button mode="text" {...clearButtonProps}>
+          Clear
+        </Button>
+      )}
       <Button
         mode="contained"
         style={{
