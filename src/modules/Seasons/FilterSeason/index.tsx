@@ -3,8 +3,8 @@ import { View } from 'react-native';
 
 import FilterFooter, { FILTER_FOOTER_HEIGHT } from '@/components/FilterFooter';
 import PaperBottomSheetModal from '@/components/PaperBottomSheetModal';
-import RadioList from '@/components/Radio/RadioList';
-import { RadioItem } from '@/components/Radio/type';
+import RadioList from '@/components/RadioList';
+import { RadioItem } from '@/components/RadioList/type';
 import { AnimeSeason } from '@/constant';
 import { capitalize } from '@/utils/formatter';
 import { BottomSheetFooterProps, BottomSheetModal } from '@gorhom/bottom-sheet';
