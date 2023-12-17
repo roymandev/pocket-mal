@@ -34,7 +34,7 @@ function List({ options, initialValues, unavailableValues, onChange }: Props) {
         };
       })
     );
-  }, [initialValues, unavailableValues]);
+  }, []);
 
   const onItemPress = useCallback((item: MultiSelectItem) => {
     setData((prev) => {

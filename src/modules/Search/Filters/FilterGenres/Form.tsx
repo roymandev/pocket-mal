@@ -59,6 +59,7 @@ function Form({ values, updateValues }: Props) {
         <Text variant="titleMedium">Include genres</Text>
 
         <MultiSelect
+          title="Include genres"
           options={transformedGenres}
           initialValues={values.genres}
           unavailableValues={values.genres_exclude}
@@ -66,6 +67,7 @@ function Form({ values, updateValues }: Props) {
           renderTrigger={({ onPress }) => (
             <Button onPress={onPress}>Add</Button>
           )}
+          snapPoints={['100%']}
         />
       </View>
 
@@ -101,6 +103,7 @@ function Form({ values, updateValues }: Props) {
       >
         <Text variant="titleMedium">Exclude genres</Text>
         <MultiSelect
+          title="Exclude genres"
           options={transformedGenres}
           initialValues={values.genres_exclude || []}
           unavailableValues={values.genres || []}
@@ -110,6 +113,7 @@ function Form({ values, updateValues }: Props) {
           renderTrigger={({ onPress }) => (
             <Button onPress={onPress}>Add</Button>
           )}
+          snapPoints={['100%']}
         />
       </View>
 

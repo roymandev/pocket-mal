@@ -1,6 +1,8 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { View } from 'react-native';
+import { Chip, Text } from 'react-native-paper';
 
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetProps } from '@gorhom/bottom-sheet';
 
 import PaperBottomSheetModal from '../PaperBottomSheetModal';
 import List from './List';
@@ -11,31 +13,35 @@ type MultiSelectTriggerProps = {
 };
 
 type Props = {
+  title?: string;
   options: MultiSelectItem[];
   initialValues: string[];
   unavailableValues?: string[];
   onChange: (values: string[]) => void;
   renderTrigger: (props: MultiSelectTriggerProps) => React.ReactNode;
+  snapPoints?: BottomSheetProps['snapPoints'];
 };
 
 function MultiSelect({
   initialValues,
   onChange,
   renderTrigger,
+  title,
+  snapPoints,
   ...rest
 }: Props) {
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const values = useRef(initialValues);
+  const [values, setValues] = useState(initialValues);
 
   const triggerPressHandler = () => {
     bottomSheetRef.current?.present();
-    values.current = initialValues;
+    setValues(initialValues);
   };
 
   const dismisHandler = () => {
-    onChange(values.current);
+    onChange(values);
   };
 
   return (
@@ -44,16 +50,23 @@ function MultiSelect({
 
       <PaperBottomSheetModal
         ref={bottomSheetRef}
-        snapPoints={['50%', '100%']}
+        snapPoints={snapPoints || ['50%', '100%']}
         onDismiss={dismisHandler}
       >
-        <List
-          initialValues={initialValues}
-          onChange={(newValues) => {
-            values.current = newValues;
+        <View
+          style={{
+            marginHorizontal: 16,
+            marginBottom: 8,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
-          {...rest}
-        />
+        >
+          <Text variant="titleMedium">{title || 'Select'}</Text>
+
+          <Chip>{values.length}</Chip>
+        </View>
+        <List initialValues={initialValues} onChange={setValues} {...rest} />
       </PaperBottomSheetModal>
     </>
   );
