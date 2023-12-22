@@ -2,15 +2,14 @@ name: Release
 
 on:
   push:
-    branches:
-      - master
+    branches: [main]
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -20,6 +19,8 @@ jobs:
         with:
           node-version: 20
 
+      - name: Prepare package lock
+        run: npm install --package-lock-only
       - name: Install dependencies
         run: npm ci
 
