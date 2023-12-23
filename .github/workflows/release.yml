@@ -1,8 +1,9 @@
 name: Release
 
-on:
-  push:
-    branches: [main]
+on: workflow_dispatch
+
+permissions:
+  contents: read # for checkout
 
 permissions:
   contents: read # for checkout
