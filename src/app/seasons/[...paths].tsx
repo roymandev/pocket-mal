@@ -6,7 +6,9 @@ import { useLocalSearchParams } from 'expo-router';
 import InfiniteAnime from '@/components/InfiniteAnime';
 import PaperStackHeader from '@/components/PaperStackHeader';
 import PaperStack from '@/components/utils/PaperStack';
-import { ANIME_SEASON } from '@/constant';
+import { ANIME_SEASON, AnimeType } from '@/constant';
+import ChipFilter from '@/modules/Filters/ChipFilter';
+import FilterType from '@/modules/Filters/FilterType';
 import FilterSeasonChip from '@/modules/Seasons/FilterSeason/FilterSeasonChip';
 import { useInfiniteSeason } from '@/modules/Seasons/query';
 
@@ -24,8 +26,9 @@ function SeasonalAnime() {
 
   const [year, setYear] = useState(initialYear);
   const [season, setSeason] = useState(initialSeason);
+  const [type, setType] = useState<AnimeType>();
 
-  const query = useInfiniteSeason({ year, season });
+  const query = useInfiniteSeason({ year, season }, { filter: type });
 
   return (
     <>
@@ -50,6 +53,12 @@ function SeasonalAnime() {
               setYear(values.year);
               setSeason(values.season);
             }}
+          />
+
+          <FilterType
+            value={type}
+            onChange={setType}
+            renderTrigger={ChipFilter}
           />
         </View>
         <InfiniteAnime {...query} />
