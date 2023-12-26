@@ -47,7 +47,6 @@ function SeasonalAnime() {
               year,
               season,
             }}
-            required
             onApply={(values) => {
               if (!values) return;
               setYear(values.year);

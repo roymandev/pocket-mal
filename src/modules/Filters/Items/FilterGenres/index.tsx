@@ -1,10 +1,9 @@
 import { useMemo, useRef } from 'react';
 
 import { useObjectState } from '@/hooks/useObjectState';
-import { BottomSheetFooterProps, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import FilterFooter from '../../../../components/FilterFooter';
-import PaperBottomSheetModal from '../../../../components/PaperBottomSheetModal';
+import Modal from '../../Modal';
 import Form from './Form';
 import {
   FilterGenresTriggerProps,
@@ -55,20 +54,6 @@ function FilterGenres({ initialValues, onApply, renderTrigger }: Props) {
     });
   };
 
-  // render
-  const renderFooter = (props: BottomSheetFooterProps) => (
-    <FilterFooter
-      {...props}
-      clearButtonProps={{
-        disabled: !values.genres?.length && !values.genres_exclude?.length,
-        onPress: onClearHandler,
-      }}
-      applyButtonProps={{
-        onPress: onApplyHanlder,
-      }}
-    />
-  );
-
   return (
     <>
       {renderTrigger({
@@ -78,13 +63,19 @@ function FilterGenres({ initialValues, onApply, renderTrigger }: Props) {
         openFilter: onTriggerPressHandler,
       })}
 
-      <PaperBottomSheetModal
+      <Modal
         ref={bottomSheetRef}
-        snapPoints={['60%', '100%']}
-        footerComponent={renderFooter}
+        snapPoints={[400, '100%']}
+        clearButtonProps={{
+          disabled: !values.genres?.length && !values.genres_exclude?.length,
+          onPress: onClearHandler,
+        }}
+        applyButtonProps={{
+          onPress: onApplyHanlder,
+        }}
       >
         <Form values={values} updateValues={handleValues.update} />
-      </PaperBottomSheetModal>
+      </Modal>
     </>
   );
 }

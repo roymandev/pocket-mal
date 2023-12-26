@@ -1,10 +1,8 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Keyboard, View } from 'react-native';
 import { SegmentedButtons, Text } from 'react-native-paper';
 
 import ChipSelect from '@/components/ChipSelect';
-import FilterFooter from '@/components/FilterFooter';
-import PaperBottomSheetModal from '@/components/PaperBottomSheetModal';
 import {
   ANIME_ORDERBY,
   ANIME_SORT,
@@ -12,11 +10,9 @@ import {
   DEFAULT_ANIME_SORT,
 } from '@/constant';
 import { useSetState } from '@/hooks/useSetState';
-import {
-  BottomSheetFooterProps,
-  BottomSheetModal,
-  BottomSheetScrollView,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+
+import Modal from '../Modal';
 
 type Values = {
   order_by?: AnimeOrderby;
@@ -56,10 +52,12 @@ function FilterOrder({ initialValues, onApply, renderTrigger }: Props) {
     if (orderby && !order.sort) setOrder({ sort: DEFAULT_ANIME_SORT });
   };
 
-  const renderFooter = useCallback(
-    (props: BottomSheetFooterProps) => (
-      <FilterFooter
-        {...props}
+  return (
+    <>
+      {renderTrigger({ openFilter: handlePresentModalPress })}
+
+      <Modal
+        ref={bottomSheetRef}
         clearButtonProps={{
           onPress: () =>
             overrideOrder({ order_by: undefined, sort: undefined }),
@@ -71,19 +69,6 @@ function FilterOrder({ initialValues, onApply, renderTrigger }: Props) {
             bottomSheetRef.current?.close();
           },
         }}
-      />
-    ),
-    [order, onApply, bottomSheetRef.current]
-  );
-
-  return (
-    <>
-      {renderTrigger({ openFilter: handlePresentModalPress })}
-
-      <PaperBottomSheetModal
-        ref={bottomSheetRef}
-        snapPoints={[350]}
-        footerComponent={renderFooter}
       >
         <BottomSheetScrollView
           contentContainerStyle={{ gap: 24, paddingHorizontal: 16 }}
@@ -119,7 +104,7 @@ function FilterOrder({ initialValues, onApply, renderTrigger }: Props) {
             </View>
           )}
         </BottomSheetScrollView>
-      </PaperBottomSheetModal>
+      </Modal>
     </>
   );
 }

@@ -2,15 +2,10 @@ import { useRef, useState } from 'react';
 import { Text } from 'react-native-paper';
 
 import ChipSelect from '@/components/ChipSelect';
-import FilterFooter from '@/components/FilterFooter';
-import PaperBottomSheetModal from '@/components/PaperBottomSheetModal';
 import { ANIME_TYPES, AnimeType } from '@/constant';
-import {
-  BottomSheetFooterProps,
-  BottomSheetModal,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 
+import Modal from '../Modal';
 import { FilterBaseTriggerProps } from '../types';
 
 type Props = {
@@ -33,20 +28,6 @@ function FilterType({ value, onChange, renderTrigger }: Props) {
     bottomSheetRef.current?.dismiss();
   };
 
-  // render
-  const renderFooter = (props: BottomSheetFooterProps) => (
-    <FilterFooter
-      {...props}
-      clearButtonProps={{
-        disabled: !_value,
-        onPress: () => setValue(undefined),
-      }}
-      applyButtonProps={{
-        onPress: onChangeHandler,
-      }}
-    />
-  );
-
   return (
     <>
       {renderTrigger({
@@ -54,11 +35,16 @@ function FilterType({ value, onChange, renderTrigger }: Props) {
         onPress: openFilterHandler,
       })}
 
-      <PaperBottomSheetModal
+      <Modal
         ref={bottomSheetRef}
         snapPoints={[300]}
-        index={0}
-        footerComponent={renderFooter}
+        clearButtonProps={{
+          disabled: !_value,
+          onPress: () => setValue(undefined),
+        }}
+        applyButtonProps={{
+          onPress: onChangeHandler,
+        }}
       >
         <BottomSheetView style={{ paddingHorizontal: 16, gap: 8 }}>
           <Text variant="titleMedium">Filter Type</Text>
@@ -73,7 +59,7 @@ function FilterType({ value, onChange, renderTrigger }: Props) {
             setSelected={(key) => setValue(key as AnimeType)}
           />
         </BottomSheetView>
-      </PaperBottomSheetModal>
+      </Modal>
     </>
   );
 }

@@ -7,7 +7,7 @@ import {
 
 export const FILTER_FOOTER_HEIGHT = 72;
 
-type Props = BottomSheetFooterProps & {
+export type ModalFooterProps = BottomSheetFooterProps & {
   clearButtonProps?: {
     onPress?: () => void;
     disabled?: boolean;
@@ -18,8 +18,13 @@ type Props = BottomSheetFooterProps & {
   };
 };
 
-function FilterFooter({ clearButtonProps, applyButtonProps, ...rest }: Props) {
+function ModalFooter({
+  clearButtonProps,
+  applyButtonProps,
+  ...rest
+}: ModalFooterProps) {
   const theme = useTheme();
+
   return (
     <BottomSheetFooter
       {...rest}
@@ -50,4 +55,4 @@ function FilterFooter({ clearButtonProps, applyButtonProps, ...rest }: Props) {
   );
 }
 
-export default FilterFooter;
+export default ModalFooter;
