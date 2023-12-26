@@ -8,8 +8,8 @@ import PaperStackHeader from '@/components/PaperStackHeader';
 import PaperStack from '@/components/utils/PaperStack';
 import { ANIME_SEASON, AnimeType } from '@/constant';
 import ChipFilter from '@/modules/Filters/ChipFilter';
-import FilterType from '@/modules/Filters/FilterType';
-import FilterSeasonChip from '@/modules/Seasons/FilterSeason/FilterSeasonChip';
+import FilterSeasonChip from '@/modules/Filters/Items/FilterSeason/FilterSeasonChip';
+import FilterType from '@/modules/Filters/Items/FilterType';
 import { useInfiniteSeason } from '@/modules/Seasons/query';
 
 function SeasonalAnime() {

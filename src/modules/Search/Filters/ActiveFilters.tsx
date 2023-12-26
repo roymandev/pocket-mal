@@ -4,8 +4,8 @@ import { FlatList } from 'react-native-gesture-handler';
 
 import { AnimeSearchParams } from '@/types/api.types';
 
-import FilterGenresChip from './FilterGenres/FilterGenresChip';
-import FilterOrder from './FilterOrder';
+import FilterGenresChip from '../../Filters/Items/FilterGenres/FilterGenresChip';
+import FilterOrder from '../../Filters/Items/FilterOrder';
 
 type Props = {
   filters: AnimeSearchParams;

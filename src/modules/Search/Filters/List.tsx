@@ -2,10 +2,10 @@ import { ComponentPropsWithoutRef } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import { Chip, List as PaperList } from 'react-native-paper';
 
-import FilterGenres from '@/modules/Search/Filters/FilterGenres';
+import FilterGenres from '@/modules/Filters/Items/FilterGenres';
 import { AnimeSearchParams } from '@/types/api.types';
 
-import FilterOrder from './FilterOrder';
+import FilterOrder from '../../Filters/Items/FilterOrder';
 
 const ITEM_STYLE: StyleProp<ViewStyle> = {
   height: 60,

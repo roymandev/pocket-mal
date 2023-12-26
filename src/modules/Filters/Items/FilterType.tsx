@@ -11,7 +11,7 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 
-import { FilterBaseTriggerProps } from './types';
+import { FilterBaseTriggerProps } from '../types';
 
 type Props = {
   value?: AnimeType;

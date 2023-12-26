@@ -1,3 +1,9 @@
 {
-  "conventionalCommits.scopes": ["search", "anime", "home", "seasons"]
+  "conventionalCommits.scopes": [
+    "search",
+    "anime",
+    "home",
+    "seasons",
+    "filters"
+  ]
 }

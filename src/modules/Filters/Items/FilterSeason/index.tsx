@@ -6,10 +6,10 @@ import PaperBottomSheetModal from '@/components/PaperBottomSheetModal';
 import RadioList from '@/components/RadioList';
 import { RadioItem } from '@/components/RadioList/type';
 import { AnimeSeason } from '@/constant';
+import { useSeasonsList } from '@/modules/Seasons/query';
 import { capitalize } from '@/utils/formatter';
 import { BottomSheetFooterProps, BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import { useSeasonsList } from '../query';
 import { FilterSeasonTriggerProps, FilterSeasonValue } from './types';
 
 type Props = {
