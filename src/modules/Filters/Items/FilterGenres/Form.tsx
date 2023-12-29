@@ -8,34 +8,37 @@ import {
   Text,
 } from 'react-native-paper';
 
-import { ObjectStateUpdate } from '@/hooks/useObjectState';
+import MultiSelect from '@/components/MultiSelect';
+import { MultiSelectItem } from '@/components/MultiSelect/types';
+import { useObjectState } from '@/hooks/useObjectState';
 import { useAnimeGenres } from '@/queries/genresQueries';
 
-import MultiSelect from '../../../../components/MultiSelect';
-import { MultiSelectItem } from '../../../../components/MultiSelect/types';
-import { FILTER_FOOTER_HEIGHT } from '../../ModalFooter';
 import { ParsedValues } from './types';
 
 type Props = {
-  values: ParsedValues;
-  updateValues: ObjectStateUpdate<ParsedValues>;
+  value: ParsedValues;
+  onChange: (values: ParsedValues) => void;
 };
 
-function Form({ values, updateValues }: Props) {
+function Form({ value, onChange }: Props) {
   const { data: genres, isLoading } = useAnimeGenres();
 
-  const transformedGenres = useMemo(() => {
+  const [, handleState] = useObjectState({ value, onChange });
+
+  const options = useMemo(() => {
     if (!genres) return [];
 
-    return genres.reduce<MultiSelectItem[]>((acc, curr) => {
-      if (!curr.mal_id) return acc;
+    return genres
+      .reduce<MultiSelectItem[]>((acc, curr) => {
+        if (!curr.mal_id) return acc;
 
-      acc.push({
-        value: curr.mal_id.toString(),
-        text: curr.name,
-      });
-      return acc;
-    }, []);
+        acc.push({
+          value: curr.mal_id.toString(),
+          text: curr.name,
+        });
+        return acc;
+      }, [])
+      .sort((a, b) => a.text?.localeCompare(b.text || '') || 0);
   }, [genres]);
 
   if (isLoading)
@@ -44,8 +47,6 @@ function Form({ values, updateValues }: Props) {
   return (
     <View
       style={{
-        flex: 1,
-        marginBottom: FILTER_FOOTER_HEIGHT,
         marginHorizontal: 16,
       }}
     >
@@ -60,10 +61,10 @@ function Form({ values, updateValues }: Props) {
 
         <MultiSelect
           title="Include genres"
-          options={transformedGenres}
-          initialValues={values.genres}
-          unavailableValues={values.genres_exclude}
-          onChange={(value) => updateValues('genres', value)}
+          options={options}
+          initialValues={value.genres}
+          unavailableValues={value.genres_exclude}
+          onChange={(newValue) => handleState.update('genres', newValue)}
           renderTrigger={({ onPress }) => (
             <Button onPress={onPress}>Add</Button>
           )}
@@ -71,7 +72,7 @@ function Form({ values, updateValues }: Props) {
         />
       </View>
 
-      {values.genres && values.genres.length > 0 && (
+      {value.genres && value.genres.length > 0 && (
         <View
           style={{
             flexDirection: 'row',
@@ -80,12 +81,15 @@ function Form({ values, updateValues }: Props) {
             marginTop: 8,
           }}
         >
-          {values.genres.map((id) => {
+          {value.genres.map((id) => {
             const deselect = () =>
-              updateValues('genres', values.genres?.filter((i) => i !== id));
+              handleState.update(
+                'genres',
+                value.genres?.filter((i) => i !== id)
+              );
             return (
               <Chip key={id} onClose={deselect} onPress={deselect}>
-                {transformedGenres.find((i) => i.value === id)?.text}
+                {options.find((i) => i.value === id)?.text}
               </Chip>
             );
           })}
@@ -104,11 +108,11 @@ function Form({ values, updateValues }: Props) {
         <Text variant="titleMedium">Exclude genres</Text>
         <MultiSelect
           title="Exclude genres"
-          options={transformedGenres}
-          initialValues={values.genres_exclude || []}
-          unavailableValues={values.genres || []}
+          options={options}
+          initialValues={value.genres_exclude || []}
+          unavailableValues={value.genres || []}
           onChange={(genres_exclude) =>
-            updateValues('genres_exclude', genres_exclude)
+            handleState.update('genres_exclude', genres_exclude)
           }
           renderTrigger={({ onPress }) => (
             <Button onPress={onPress}>Add</Button>
@@ -125,15 +129,15 @@ function Form({ values, updateValues }: Props) {
           marginTop: 8,
         }}
       >
-        {values.genres_exclude?.map((id) => {
+        {value.genres_exclude?.map((id) => {
           const deselect = () =>
-            updateValues(
+            handleState.update(
               'genres_exclude',
-              values.genres_exclude?.filter((i) => i !== id)
+              value.genres_exclude?.filter((i) => i !== id)
             );
           return (
             <Chip key={id} onClose={deselect} onPress={deselect}>
-              {transformedGenres.find((i) => i.value === id)?.text}
+              {options.find((i) => i.value === id)?.text}
             </Chip>
           );
         })}

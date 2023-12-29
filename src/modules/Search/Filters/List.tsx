@@ -2,6 +2,7 @@ import { ComponentPropsWithoutRef } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import { Chip, List as PaperList } from 'react-native-paper';
 
+import ChipFilter from '@/modules/Filters/ChipFilter';
 import FilterGenres from '@/modules/Filters/Items/FilterGenres';
 import { AnimeSearchParams } from '@/types/api.types';
 
@@ -52,12 +53,14 @@ function List({ filters, onUpdateFilter }: Props) {
       <FilterGenres
         initialValues={filters}
         onApply={onUpdateFilter}
-        renderTrigger={({ initialValuesLength, openFilter }) => (
+        renderTrigger={(props) => (
           <Item
             title="Genres"
-            onPress={openFilter}
+            onPress={props.onPress}
             right={() =>
-              !!initialValuesLength && <Chip>{initialValuesLength}</Chip>
+              (filters.genres || filters.genres_exclude) && (
+                <ChipFilter {...props} />
+              )
             }
           />
         )}

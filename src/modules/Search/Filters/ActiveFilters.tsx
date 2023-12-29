@@ -2,10 +2,10 @@ import { Chip } from 'react-native-paper';
 
 import { FlatList } from 'react-native-gesture-handler';
 
+import ChipFilter from '@/modules/Filters/ChipFilter';
+import FilterGenres from '@/modules/Filters/Items/FilterGenres';
+import FilterOrder from '@/modules/Filters/Items/FilterOrder';
 import { AnimeSearchParams } from '@/types/api.types';
-
-import FilterGenresChip from '../../Filters/Items/FilterGenres/FilterGenresChip';
-import FilterOrder from '../../Filters/Items/FilterOrder';
 
 type Props = {
   filters: AnimeSearchParams;
@@ -39,7 +39,11 @@ const renderItem = (
     case 'genres_exclude':
       if (item === 'genres_exclude' && filters.genres) return null;
       return (
-        <FilterGenresChip initialValues={filters} onApply={onUpdateFilter} />
+        <FilterGenres
+          initialValues={filters}
+          onApply={onUpdateFilter}
+          renderTrigger={ChipFilter}
+        />
       );
 
     default:

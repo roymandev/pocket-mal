@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 
 // Function to update either single or multiple object property
 export type ObjectStateUpdate<
@@ -25,24 +25,41 @@ const setter = <V, P>(prev: P, value: SetStateAction<V>) => {
   return value;
 };
 
-export const useObjectState = <T extends Record<string, any>>(
-  initialState: T
-) => {
-  const [state, setState] = useState(initialState);
+type Props<T> = {
+  value?: T;
+  defaultValue?: T;
+  finalValue?: T;
+  onChange?: (value: T) => void;
+};
 
-  const update: ObjectStateUpdate<T> = (key, value) => {
+export const useObjectState = <T extends Record<string, any>>({
+  value,
+  defaultValue = {} as T,
+  onChange,
+}: Props<T>) => {
+  const [_value, setValue] = useState(value || defaultValue);
+
+  useEffect(() => {
+    if (value) setValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    onChange?.(_value);
+  }, [_value]);
+
+  const update: ObjectStateUpdate<T> = (key, newValue) => {
     if (Array.isArray(key)) {
-      setState((prev) => ({
+      setValue((prev) => ({
         ...prev,
-        ...Object.fromEntries(key.map((k) => [k, setter(prev[k], value)])),
+        ...Object.fromEntries(key.map((k) => [k, setter(prev[k], newValue)])),
       }));
     } else if (typeof key === 'string') {
-      setState((prev) => ({
+      setValue((prev) => ({
         ...prev,
-        [key]: setter(prev[key], value),
+        [key]: setter(prev[key], newValue),
       }));
     }
   };
 
-  return [state, { update, set: setState }] as const;
+  return [_value, { update, set: setValue }] as const;
 };
