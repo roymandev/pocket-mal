@@ -23,11 +23,11 @@ const renderItem = (
         <FilterOrder
           initialValues={filters}
           onApply={onUpdateFilter}
-          renderTrigger={({ openFilter }) => (
+          renderTrigger={(props) => (
             <Chip
               icon={filters.sort ? 'sort-descending' : 'sort-ascending'}
               textStyle={{ textTransform: 'capitalize' }}
-              onPress={openFilter}
+              {...props}
             >
               {filters.order_by}
             </Chip>

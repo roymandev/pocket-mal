@@ -1,12 +1,11 @@
 import { ComponentPropsWithoutRef } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
-import { Chip, List as PaperList } from 'react-native-paper';
+import { List as PaperList } from 'react-native-paper';
 
 import ChipFilter from '@/modules/Filters/ChipFilter';
 import FilterGenres from '@/modules/Filters/Items/FilterGenres';
+import FilterOrder from '@/modules/Filters/Items/FilterOrder';
 import { AnimeSearchParams } from '@/types/api.types';
-
-import FilterOrder from '../../Filters/Items/FilterOrder';
 
 const ITEM_STYLE: StyleProp<ViewStyle> = {
   height: 60,
@@ -32,18 +31,19 @@ function List({ filters, onUpdateFilter }: Props) {
       <FilterOrder
         initialValues={filters}
         onApply={onUpdateFilter}
-        renderTrigger={({ openFilter }) => (
+        renderTrigger={(props) => (
           <Item
             title="Order & Sort"
-            onPress={openFilter}
+            onPress={props.onPress}
             right={() =>
               !!filters.order_by && (
-                <Chip
+                <ChipFilter
                   icon={filters.sort ? 'sort-descending' : 'sort-ascending'}
                   textStyle={{ textTransform: 'capitalize' }}
+                  {...props}
                 >
                   {filters.order_by}
-                </Chip>
+                </ChipFilter>
               )
             }
           />

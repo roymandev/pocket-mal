@@ -13,20 +13,17 @@ import { useSetState } from '@/hooks/useSetState';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 import Modal from '../Modal';
+import { FilterBaseTriggerProps } from '../types';
 
 type Values = {
   order_by?: AnimeOrderby;
   sort?: typeof DEFAULT_ANIME_SORT;
 };
 
-export type FilterOrderTriggerProps = {
-  openFilter: () => void;
-};
-
 type Props = {
   initialValues: Values;
   onApply: (values: Values) => void;
-  renderTrigger: (props: FilterOrderTriggerProps) => JSX.Element;
+  renderTrigger: (props: FilterBaseTriggerProps) => JSX.Element;
 };
 
 function FilterOrder({ initialValues, onApply, renderTrigger }: Props) {
@@ -54,7 +51,7 @@ function FilterOrder({ initialValues, onApply, renderTrigger }: Props) {
 
   return (
     <>
-      {renderTrigger({ openFilter: handlePresentModalPress })}
+      {renderTrigger({ onPress: handlePresentModalPress, children: 'Order' })}
 
       <Modal
         ref={bottomSheetRef}
