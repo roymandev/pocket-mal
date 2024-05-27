@@ -5,41 +5,35 @@ import {
   Persister,
 } from '@tanstack/react-query-persist-client';
 
-const db = SQLite.openDatabase('reactQuery.db');
+const db = SQLite.openDatabaseSync('reactQuery.db');
 
 /**
  * Creates an Expo SQLite persister
  */
 export function createExpoSQLitePersister() {
-  db.transaction((tx) => {
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS clients (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT);`,
-      []
+  db.withExclusiveTransactionAsync(async (txn) => {
+    await txn.runAsync(
+      `CREATE TABLE IF NOT EXISTS clients (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT);`
     );
   });
 
   return {
-    persistClient: async (client: PersistedClient) => {
-      db.transaction((tx) => {
-        tx.executeSql(`INSERT INTO clients (data) VALUES (?)`, [
+    persistClient: async (client: PersistedClient) =>
+      db.withExclusiveTransactionAsync(async (txn) => {
+        await txn.runAsync(`INSERT INTO clients (data) VALUES (?)`, [
           JSON.stringify(client),
         ]);
-      });
-    },
+      }),
     restoreClient: async () =>
-      new Promise((resolve) => {
-        db.transaction((tx) => {
-          tx.executeSql(
-            `SELECT * FROM clients ORDER BY id DESC LIMIT 1`,
-            [],
-            (_, { rows }) =>
-              resolve(rows.length ? JSON.parse(rows.item(0).data) : null)
-          );
-        });
+      db.withExclusiveTransactionAsync(async (txn) => {
+        const result = (await txn.getFirstAsync(
+          `SELECT * FROM clients ORDER BY id DESC`
+        )) as any;
+        return result.data ? JSON.parse(result.data) : null;
       }),
     removeClient: async () => {
-      db.transaction((tx) => {
-        tx.executeSql(`DELETE FROM clients`, []);
+      db.withExclusiveTransactionAsync(async (txn) => {
+        await txn.runAsync(`DELETE FROM clients`);
       });
     },
   } as Persister;
